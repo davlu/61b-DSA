@@ -99,7 +99,7 @@ public class IntList {
     public static IntList catenate(IntList A, IntList B) {
         IntList C = new IntList();
         IntList temp = C;
-        while(C!=null){
+        while(temp !=null){
             if(A == null){
                 temp = B;
             }
