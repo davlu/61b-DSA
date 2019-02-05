@@ -17,8 +17,9 @@ public class LinkedListDeque<val>{
         sentinel.next = sentinel;
     }
 
-    /*todo*/
+
     public LinkedListDeque(LinkedListDeque other){
+        this();
         for(int i = other.size-1; i >= 0; i++){
             this.addFirst((val)other.get(i));
         }
@@ -71,7 +72,7 @@ public class LinkedListDeque<val>{
         return (val)temp.item;
     }
 
-    /*todo*/
+    
     public val getRecursive(int index){
         Node temp = sentinel;
         return helper(index, temp);
