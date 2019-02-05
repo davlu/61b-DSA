@@ -17,29 +17,48 @@ public class LinkedListDeque<val>{
         sentinel = new Node(null);
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
-        tail = sentinel;
-        head = sentinel;
     }
     public void addFirst(val item){
-        Node temp = sentinel.next;
         Node new_node = new Node(item);
-        sentinel.next = new_node;
+        sentinel.next.prev = new_node;
+        new_node.next = sentinel.next;
         new_node.prev = sentinel;
-        new_node.next = temp;
-        temp.prev = new_node;
+        sentinel.next = new_node;
         size += 1;
     }
+    public val removeFirst(){
+
+    }
+
     public void addLast(val item){
-        Node temp = sentinel.prev;
         Node new_node = new Node(item);
-        new_node.next = temp;
-        new_node.prev = temp.prev;
-        temp.prev = new_node;
-        temp.prev.next = new_node;
+        new_node.next = sentinel;
+        new_node.prev = sentinel.prev;
+        sentinel.prev.next = new_node;
+        sentinel.prev = new_node;
         size += 1;
+    }
+
+    public val removeLast(){
+
     }
 
     public int size(){
         return size;
+    }
+    public boolean isEmpty(){
+        return size ==0;
+    }
+    public val get(int index){
+        
+    }
+    public void printDeque(){
+        String deque = "";
+        Node node = sentinel.next;
+        while(node.item != null){
+            deque = deque + " " + (String) node.item;
+            node = node.next;
+        }
+        System.out.println(deque);
     }
 }
