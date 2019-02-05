@@ -1,6 +1,4 @@
 public class LinkedListDeque<val>{
-    Node tail;
-    Node head;
     Node sentinel;
     int size;
     /**Node class with prev, next, and generic item attribute*/
@@ -17,6 +15,15 @@ public class LinkedListDeque<val>{
         sentinel = new Node(null);
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
+    }
+
+    /*todo*/
+    public LinkedListDeque(LinkedListDeque other){
+        for(int i = other.size-1; i >= 0; i++){
+            this.addFirst((val)other.get(i));
+        }
+
+
     }
     public void addFirst(val item){
         Node new_node = new Node(item);
@@ -66,14 +73,18 @@ public class LinkedListDeque<val>{
 
     /*todo*/
     public val getRecursive(int index){
-        if(index == 0){
-            return
-        }
+        Node temp = sentinel;
+        return helper(index, temp);
     }
 
-    /*todo*/
-    public LinkedListDeque(LinkedListDeque other){
-
+    public val helper(int i, Node n){
+        if(i == 0){
+            return (val) n.item;
+        }
+        else{
+            n = n.next;
+            return helper(i--, n);
+        }
     }
 
     public void printDeque(){
