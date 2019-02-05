@@ -27,7 +27,10 @@ public class LinkedListDeque<val>{
         size += 1;
     }
     public val removeFirst(){
-
+        val ret_item = (val)sentinel.next.item;
+        sentinel.next = sentinel.next.next;
+        sentinel.next.next.prev = sentinel;
+        return ret_item;
     }
 
     public void addLast(val item){
@@ -40,7 +43,10 @@ public class LinkedListDeque<val>{
     }
 
     public val removeLast(){
-
+        val ret_item = (val)sentinel.prev.item;
+        sentinel.prev = sentinel.prev.prev;
+        sentinel.prev.prev.next = sentinel;
+        return ret_item;
     }
 
     public int size(){
@@ -49,9 +55,27 @@ public class LinkedListDeque<val>{
     public boolean isEmpty(){
         return size ==0;
     }
+
     public val get(int index){
-        
+        Node temp = sentinel;
+        for(int i = 0; i < size; i++){
+            temp = sentinel.next;
+        }
+        return (val)temp.item;
     }
+
+    /*todo*/
+    public val getRecursive(int index){
+        if(index == 0){
+            return
+        }
+    }
+
+    /*todo*/
+    public LinkedListDeque(LinkedListDeque other){
+
+    }
+
     public void printDeque(){
         String deque = "";
         Node node = sentinel.next;
