@@ -1,5 +1,6 @@
 public class ArrayDeque<val> {
     private int size = 8;
+    private int array_size = 0;
     val[] items;
     int firstPointer = 4;
     int lastPointer = 5;
@@ -11,38 +12,64 @@ public class ArrayDeque<val> {
 
     }
     public void addFirst(val item){
+        if(array_size == size){
+            resizeBig();
+        }
         items[firstPointer] = item;
         firstPointer = (firstPointer-1)%size;
+        array_size++;
     }
     public void addLast(val item){
+        if(array_size == size){
+            resizeBig();
+        }
         items[lastPointer] = item;
         lastPointer = (lastPointer+1)%size;
+        array_size++;
+    }
+    public void resizeBig(){
+
     }
     public boolean isEmpty(){
-        return size == 0;
+        return array_size == 0;
     }
     public int size(){
-        return size;
+        return array_size;
     }
     public void printDeque(){
         String deque = "";
-        for(int i = firstPointer+1; i < lastPointer; i++){
-            if(i>this.size-1){
-                i = i%this.size;
+        int start = firstPointer+1;
+        for(int i = 0; i < size; i++){
+            deque = deque + " " + this.items[start];
+            if (start == size-1){
+                start = 0;
             }
-            deque = deque + " " + this.items[i];
+            else{
+                start += 1;
+            }
         }
         System.out.println(deque);
     }
     public val removeFirst(){
-        val holder = this.items[firstPointer++];
-        this.items[firstPointer++] = null;
+        if(array_size > 16 && array_size >= array_size/size){
+            resizeSmall();
+        }
+        val holder = this.items[++firstPointer];
+        this.items[firstPointer] = null;
+        array_size--;
         return holder;
     }
     public val removeLast(){
-        val holder = this.items[lastPointer--];
-        this.items[lastPointer--] = null;
+        if(array_size > 16 && array_size >= array_size/size){
+            resizeSmall();
+        }
+        val holder = this.items[--lastPointer];
+        this.items[lastPointer] = null;
+        array_size--;
         return holder;
+    }
+    public void resizeSmall(){
+        
     }
     public val get(int index){
         return items[index];
