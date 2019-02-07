@@ -62,7 +62,8 @@ public class ArrayDeque<val> {
         if(this.array_size > 16 && (double) this.array_size/this.size < 0.25){
             resizeSmall(array_size/2);
         }
-        val holder = this.items[++this.firstPointer];
+        this.firstPointer = this.firstPointer+1%this.size;
+        val holder = this.items[this.firstPointer];
         this.items[this.firstPointer] = null;
         this.array_size--;
         return holder;
@@ -71,7 +72,8 @@ public class ArrayDeque<val> {
         if(this.array_size > 16 && (double) this.array_size/this.size < 0.25){
             resizeSmall(this.array_size/2);
         }
-        val holder = this.items[--this.lastPointer];
+        this.lastPointer = Math.floorMod(this.lastPointer-1, this.size);
+        val holder = this.items[this.lastPointer];
         this.items[this.lastPointer] = null;
         this.array_size--;
         return holder;
@@ -112,6 +114,10 @@ public class ArrayDeque<val> {
         this.lastPointer = this.size;
     }
     public val get(int index){
-        return items[index];
+        int temp = firstPointer;
+        for(int i = 0; i <= index; i++){
+            temp = (temp+1)%this.size;
+        }
+        return items[temp];
     }
 }
