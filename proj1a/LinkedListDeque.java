@@ -1,12 +1,13 @@
-public class LinkedListDeque<val>{
+
+public class LinkedListDeque<T>{
     Node sentinel;
     int size;
     /**Node class with prev, next, and generic item attribute*/
-    public class Node<val>{
+    public class Node<T>{
         Node prev;
         Node next;
-        val item;
-        public Node(val i){
+        T item;
+        public Node(T i){
             this.item = i;
         }
     }
@@ -20,13 +21,13 @@ public class LinkedListDeque<val>{
 
     public LinkedListDeque(LinkedListDeque other){
         this();
-        for(int i = other.size-1; i >= 0; i++){
-            this.addFirst((val)other.get(i));
+        for(int i = other.size-1; i >= 0; i--){
+            this.addFirst((T)other.get(i));
         }
 
 
     }
-    public void addFirst(val item){
+    public void addFirst(T item){
         Node new_node = new Node(item);
         sentinel.next.prev = new_node;
         new_node.next = sentinel.next;
@@ -34,14 +35,15 @@ public class LinkedListDeque<val>{
         sentinel.next = new_node;
         size += 1;
     }
-    public val removeFirst(){
-        val ret_item = (val)sentinel.next.item;
+    public T removeFirst(){
+        T ret_item = (T)sentinel.next.item;
         sentinel.next = sentinel.next.next;
         sentinel.next.next.prev = sentinel;
+        this.size-=1;
         return ret_item;
     }
 
-    public void addLast(val item){
+    public void addLast(T item){
         Node new_node = new Node(item);
         new_node.next = sentinel;
         new_node.prev = sentinel.prev;
@@ -50,10 +52,11 @@ public class LinkedListDeque<val>{
         size += 1;
     }
 
-    public val removeLast(){
-        val ret_item = (val)sentinel.prev.item;
+    public T removeLast(){
+        T ret_item = (T)sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
         sentinel.prev.prev.next = sentinel;
+        this.size-=1;
         return ret_item;
     }
 
@@ -64,27 +67,27 @@ public class LinkedListDeque<val>{
         return size ==0;
     }
 
-    public val get(int index){
+    public T get(int index){
         Node temp = sentinel;
-        for(int i = 0; i < size; i++){
-            temp = sentinel.next;
+        for(int i = -1; i < index; i++){
+            temp = temp.next;
         }
-        return (val)temp.item;
+        return (T)temp.item;
     }
 
-    
-    public val getRecursive(int index){
-        Node temp = sentinel;
+
+    public T getRecursive(int index){
+        Node temp = sentinel.next;
         return helper(index, temp);
     }
 
-    public val helper(int i, Node n){
+    public T helper(int i, Node n){
         if(i == 0){
-            return (val) n.item;
+            return (T) n.item;
         }
         else{
             n = n.next;
-            return helper(i--, n);
+            return helper(--i, n);
         }
     }
 
@@ -92,7 +95,7 @@ public class LinkedListDeque<val>{
         String deque = "";
         Node node = sentinel.next;
         while(node.item != null){
-            deque = deque + " " + (String) node.item;
+            deque = deque + " " + String.valueOf(node.item);
             node = node.next;
         }
         System.out.println(deque);
