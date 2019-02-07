@@ -40,6 +40,9 @@ public class LinkedListDeque<T>{
         Node temp = sentinel.next;
         sentinel.next = sentinel.next.next;
         temp.next.prev = sentinel;
+        if(size == 0){
+            return ret_item;
+        }
         this.size-=1;
         return ret_item;
     }
@@ -57,6 +60,9 @@ public class LinkedListDeque<T>{
         T ret_item = (T)sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
         sentinel.prev.next = sentinel;
+        if(size == 0){
+            return ret_item;
+        }
         this.size-=1;
         return ret_item;
     }
