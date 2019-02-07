@@ -37,8 +37,9 @@ public class LinkedListDeque<T>{
     }
     public T removeFirst(){
         T ret_item = (T)sentinel.next.item;
+        Node temp = sentinel.next;
         sentinel.next = sentinel.next.next;
-        sentinel.next.next.prev = sentinel;
+        temp.next.prev = sentinel;
         this.size-=1;
         return ret_item;
     }
@@ -55,7 +56,7 @@ public class LinkedListDeque<T>{
     public T removeLast(){
         T ret_item = (T)sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
-        sentinel.prev.prev.next = sentinel;
+        sentinel.prev.next = sentinel;
         this.size-=1;
         return ret_item;
     }
