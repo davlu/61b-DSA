@@ -26,7 +26,9 @@ public class ArrayDeque<val> {
         if(firstPointer == 0){
             firstPointer = size-1;
         }
-        firstPointer--;
+        else {
+            firstPointer--;
+        }
         array_size++;
     }
     public void addLast(val item){
