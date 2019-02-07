@@ -51,7 +51,7 @@ public class ArrayDeque<val> {
         System.out.println(deque);
     }
     public val removeFirst(){
-        if(array_size > 16 && array_size >= array_size/size){
+        if(array_size > 16 && array_size/size < 0.25){
             resizeSmall();
         }
         val holder = this.items[++firstPointer];
@@ -60,7 +60,7 @@ public class ArrayDeque<val> {
         return holder;
     }
     public val removeLast(){
-        if(array_size > 16 && array_size >= array_size/size){
+        if(array_size > 16 && array_size/size < 0.25){
             resizeSmall();
         }
         val holder = this.items[--lastPointer];
@@ -69,7 +69,7 @@ public class ArrayDeque<val> {
         return holder;
     }
     public void resizeSmall(){
-        
+
     }
     public val get(int index){
         return items[index];
