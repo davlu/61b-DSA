@@ -263,11 +263,53 @@ public class ArrayDequeTest {
         System.out.println("add remove test 03: ");
         printTestStatus(passed03);
     }
+
+    public static void comprehensiveTest2(){
+        ArrayDeque<Integer> ad01 = new ArrayDeque<Integer>();
+        ad01.addLast(0);
+        ad01.removeLast();
+        ad01.addFirst(2);
+        ad01.addFirst(3);
+        boolean passed01 = checkReturn(2, ad01.get(1));
+        ad01.addFirst(5);
+        passed01 = checkReturn(2,ad01.removeLast()) && passed01;
+        ad01.addFirst(7);
+        ad01.addLast(8);
+        ad01.addLast(9);
+        passed01 = checkReturn(5,ad01.get(1)) && passed01;
+        ad01.addFirst(11);
+        ad01.addLast(12);
+        ad01.addLast(13);
+        passed01 = checkReturn(12, ad01.get(6)) && passed01;
+        ad01.addFirst(15);
+        passed01 = checkReturn(13,ad01.removeLast()) && passed01;
+        System.out.println("add remove test 04: ");
+        printTestStatus(passed01);
+
+
+        ArrayDeque<Integer> ad02 = new ArrayDeque<Integer>(ad01);
+        System.out.println("Testing ad01 deque and ad02 deque. Printing ad01: ");
+        ad01.printDeque();
+        System.out.println("Now printing ad02: ");
+        ad02.printDeque();
+
+    }
+
+    public static void resizeSmallTest(){
+        ArrayDeque<Integer> ad01 = new ArrayDeque<Integer>();
+        ad01.resizeBig(1000);
+        ad01.addFirst(1);
+        ad01.removeFirst();
+    }
     public static void main(String[] args) {
         System.out.println("Running tests.\n");
+        /*
         addIsEmptySizeTest();
         addRemoveTest();
         comprehensiveTest();
         comprehensiveTest1();
+        comprehensiveTest2();
+        */
+        resizeSmallTest();
     }
 }
