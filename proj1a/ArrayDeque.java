@@ -19,32 +19,35 @@ public class ArrayDeque<val> {
         this.size = other.size;
     }
     public void addFirst(val item){
-        if(array_size == size){
-            resizeBig(array_size*2);
+        if(this.array_size == this.size){
+            resizeBig(this.array_size*2);
         }
-        items[firstPointer] = item;
-        if(firstPointer == 0){
-            firstPointer = size-1;
+        this.items[this.firstPointer] = item;
+        if(this.firstPointer == 0){
+            this.firstPointer = this.size-1;
         }
         else {
-            firstPointer--;
+            this.firstPointer--;
         }
-        array_size++;
+        this.array_size++;
     }
     public void addLast(val item){
-        if(array_size == size){
-            resizeBig(array_size*2);
+        if(this.array_size == this.size){
+            resizeBig(this.array_size*2);
+            this.items[this.lastPointer] = item;
         }
-        items[lastPointer] = item;
-        lastPointer = (lastPointer+1)%size;
-        array_size++;
+        else {
+            this.items[this.lastPointer] = item;
+        }
+        this.lastPointer = (this.lastPointer+1)%this.size;
+        this.array_size++;
     }
 
     public boolean isEmpty(){
-        return array_size == 0;
+        return this.array_size == 0;
     }
     public int size(){
-        return array_size;
+        return this.array_size;
     }
     public void printDeque(){
         String deque = "";
@@ -62,9 +65,9 @@ public class ArrayDeque<val> {
     }
     public val removeFirst(){
         if(this.array_size > 16 && (double) this.array_size/this.size < 0.25){
-            resizeSmall(array_size/2);
+            resizeSmall(this.array_size/2);
         }
-        this.firstPointer = this.firstPointer+1%this.size;
+        this.firstPointer = (this.firstPointer+1)%this.size;
         val holder = this.items[this.firstPointer];
         this.items[this.firstPointer] = null;
         this.array_size--;
@@ -81,7 +84,6 @@ public class ArrayDeque<val> {
         return holder;
     }
     public void resizeSmall(int new_size){
-        this.array_size = new_size;
         val[] resized_items = (val []) new Object[this.array_size];
         int start = this.firstPointer+1;
         for(int i = 0; i < this.size; i++){
@@ -93,14 +95,14 @@ public class ArrayDeque<val> {
                 start += 1;
             }
         }
+        this.size = new_size;
         this.items = resized_items;
-        this.firstPointer = this.array_size-1;
-        this.lastPointer = this.size;
+        this.firstPointer = this.size-1;
+        this.lastPointer = this.array_size;
     }
 
     public void resizeBig(int new_size){
-        this.array_size = new_size;
-        val[] resized_items = (val []) new Object[this.array_size];
+        val[] resized_items = (val []) new Object[new_size];
         int start = this.firstPointer+1;
         for(int i = 0; i < this.size; i++){
             resized_items[i] = this.items[start];
@@ -111,9 +113,10 @@ public class ArrayDeque<val> {
                 start += 1;
             }
         }
+        this.size = new_size;
         this.items = resized_items;
-        this.firstPointer = this.array_size-1;
-        this.lastPointer = this.size;
+        this.firstPointer = this.size-1;
+        this.lastPointer = this.array_size;
     }
     public val get(int index){
         int temp = firstPointer;
