@@ -90,7 +90,7 @@ public class ArrayDeque<T> {
         return holder;
     }
 
-    public void resizeBig(int new_Size) {
+    private void resizeBig(int new_Size) {
         T[] resized_Items = (T []) new Object[new_Size];
         int start = (this.firstPointer + 1) % this.size;
         for (int i = 0; i < this.size; i++){
@@ -108,7 +108,7 @@ public class ArrayDeque<T> {
         this.lastPointer = this.array_Size;
     }
 
-    public void resizeSmall(int new_Size) {
+    private void resizeSmall(int new_Size) {
         T[] resized_Items = (T []) new Object[new_Size];
         int start = (this.firstPointer + 1) % this.size;
         for (int i = 0; i < this.array_Size; i++) {

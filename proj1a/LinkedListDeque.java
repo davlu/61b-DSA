@@ -2,7 +2,7 @@ public class LinkedListDeque<T> {
     private Node sentinel;
     private int size;
     /**Node class with prev, next, and generic item attribute*/
-    private class Node<T> {
+    public class Node<T> {
         Node prev;
         Node next;
         T item;
@@ -18,7 +18,7 @@ public class LinkedListDeque<T> {
     }
 
 
-    private LinkedListDeque(LinkedListDeque other) {
+    public LinkedListDeque(LinkedListDeque other) {
         this();
         for (int i = other.size - 1; i >= 0; i--) {
             this.addFirst((T)other.get(i));
@@ -55,7 +55,7 @@ public class LinkedListDeque<T> {
         size += 1;
     }
 
-    private T removeLast() {
+    public T removeLast() {
         T ret_Item = (T) sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
         sentinel.prev.next = sentinel;
@@ -73,7 +73,7 @@ public class LinkedListDeque<T> {
         return size ==0;
     }
 
-    private T get(int index) {
+    public T get(int index) {
         Node temp = sentinel;
         for (int i = -1; i < index; i++) {
             temp = temp.next;
@@ -82,7 +82,7 @@ public class LinkedListDeque<T> {
     }
 
 
-    private T getRecursive(int index) {
+    public T getRecursive(int index) {
         Node temp = sentinel.next;
         return helper(index, temp);
     }
