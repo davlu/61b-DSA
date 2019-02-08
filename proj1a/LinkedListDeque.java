@@ -1,107 +1,106 @@
-
-public class LinkedListDeque<T>{
-    Node sentinel;
-    int size;
+public class LinkedListDeque<T> {
+    private Node sentinel;
+    private int size;
     /**Node class with prev, next, and generic item attribute*/
-    public class Node<T>{
+    private class Node<T> {
         Node prev;
         Node next;
         T item;
-        public Node(T i){
+        public Node(T i) {
             this.item = i;
         }
     }
 
-    public LinkedListDeque(){
+    private LinkedListDeque() {
         sentinel = new Node(null);
         sentinel.prev = sentinel;
         sentinel.next = sentinel;
     }
 
 
-    public LinkedListDeque(LinkedListDeque other){
+    private LinkedListDeque(LinkedListDeque other) {
         this();
-        for(int i = other.size-1; i >= 0; i--){
+        for (int i = other.size - 1; i >= 0; i--) {
             this.addFirst((T)other.get(i));
         }
 
 
     }
-    public void addFirst(T item){
-        Node new_node = new Node(item);
-        sentinel.next.prev = new_node;
-        new_node.next = sentinel.next;
-        new_node.prev = sentinel;
-        sentinel.next = new_node;
+    private void addFirst(T item) {
+        Node new_Node = new Node(item);
+        sentinel.next.prev = new_Node;
+        new_Node.next = sentinel.next;
+        new_Node.prev = sentinel;
+        sentinel.next = new_Node;
         size += 1;
     }
-    public T removeFirst(){
-        T ret_item = (T)sentinel.next.item;
+    private T removeFirst() {
+        T ret_Item = (T) sentinel.next.item;
         Node temp = sentinel.next;
         sentinel.next = sentinel.next.next;
         temp.next.prev = sentinel;
-        if(size == 0){
-            return ret_item;
+        if (size == 0) {
+            return ret_Item;
         }
-        this.size-=1;
-        return ret_item;
+        this.size -= 1;
+        return ret_Item;
     }
 
-    public void addLast(T item){
-        Node new_node = new Node(item);
-        new_node.next = sentinel;
-        new_node.prev = sentinel.prev;
-        sentinel.prev.next = new_node;
-        sentinel.prev = new_node;
+    private void addLast(T item) {
+        Node new_Node = new Node(item);
+        new_Node.next = sentinel;
+        new_Node.prev = sentinel.prev;
+        sentinel.prev.next = new_Node;
+        sentinel.prev = new_Node;
         size += 1;
     }
 
-    public T removeLast(){
-        T ret_item = (T)sentinel.prev.item;
+    private T removeLast() {
+        T ret_Item = (T) sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
         sentinel.prev.next = sentinel;
-        if(size == 0){
-            return ret_item;
+        if (size == 0) {
+            return ret_Item;
         }
-        this.size-=1;
-        return ret_item;
+        this.size -= 1;
+        return ret_Item;
     }
 
-    public int size(){
+    private int size() {
         return size;
     }
-    public boolean isEmpty(){
+    private boolean isEmpty() {
         return size ==0;
     }
 
-    public T get(int index){
+    private T get(int index) {
         Node temp = sentinel;
-        for(int i = -1; i < index; i++){
+        for (int i = -1; i < index; i++) {
             temp = temp.next;
         }
-        return (T)temp.item;
+        return (T) temp.item;
     }
 
 
-    public T getRecursive(int index){
+    private T getRecursive(int index) {
         Node temp = sentinel.next;
         return helper(index, temp);
     }
 
-    public T helper(int i, Node n){
-        if(i == 0){
+    private T helper(int i, Node n) {
+        if (i == 0) {
             return (T) n.item;
         }
-        else{
+        else {
             n = n.next;
             return helper(--i, n);
         }
     }
 
-    public void printDeque(){
+    private void printDeque(){
         String deque = "";
         Node node = sentinel.next;
-        while(node.item != null){
+        while (node.item != null) {
             deque = deque + " " + String.valueOf(node.item);
             node = node.next;
         }
