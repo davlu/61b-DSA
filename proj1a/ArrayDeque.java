@@ -64,8 +64,8 @@ public class ArrayDeque<val> {
         System.out.println(deque);
     }
     public val removeFirst(){
-        if(this.array_size > 16 && (double) this.array_size/this.size < 0.25){
-            resizeSmall(this.array_size/2);
+        if(this.size > 16 && (double) this.array_size/this.size < 0.25){
+            resizeSmall(this.array_size*4);
         }
         this.firstPointer = (this.firstPointer+1)%this.size;
         val holder = this.items[this.firstPointer];
@@ -77,8 +77,8 @@ public class ArrayDeque<val> {
         return holder;
     }
     public val removeLast(){
-        if(this.array_size > 16 && (double) this.array_size/this.size < 0.25){
-            resizeSmall(this.array_size/2);
+        if(this.size > 16 && (double) this.array_size/this.size < 0.25){
+            resizeSmall(this.array_size*4);
         }
         this.lastPointer = Math.floorMod(this.lastPointer-1, this.size);
         val holder = this.items[this.lastPointer];
@@ -88,23 +88,6 @@ public class ArrayDeque<val> {
         }
         this.array_size--;
         return holder;
-    }
-    public void resizeSmall(int new_size){
-        val[] resized_items = (val []) new Object[this.array_size];
-        int start = (this.firstPointer+1)%this.size;
-        for(int i = 0; i < this.size; i++){
-            resized_items[i] = this.items[start];
-            if (start == this.size-1){
-                start = 0;
-            }
-            else{
-                start += 1;
-            }
-        }
-        this.size = new_size;
-        this.items = resized_items;
-        this.firstPointer = this.size-1;
-        this.lastPointer = this.array_size;
     }
 
     public void resizeBig(int new_size){
@@ -124,6 +107,25 @@ public class ArrayDeque<val> {
         this.firstPointer = this.size-1;
         this.lastPointer = this.array_size;
     }
+
+    public void resizeSmall(int new_size){
+        val[] resized_items = (val []) new Object[new_size];
+        int start = (this.firstPointer+1)%this.size;
+        for(int i = 0; i < this.array_size; i++){
+            resized_items[i] = this.items[start];
+            if(start == this.size-1){
+                start = 0;
+            }
+            else{
+                start += 1;
+            }
+        }
+        this.size = new_size;
+        this.items = resized_items;
+        this.firstPointer = this.size-1;
+        this.lastPointer = this.array_size;
+    }
+
     public val get(int index){
         int temp = this.firstPointer;
         for(int i = 0; i <= index; i++){
