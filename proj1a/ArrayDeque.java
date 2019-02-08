@@ -18,7 +18,7 @@ public class ArrayDeque<T> {
         this.array_Size = other.array_Size;
         this.size = other.size;
     }
-    private void addFirst(T item) {
+    public void addFirst(T item) {
         if(this.array_Size == this.size) {
             resizeBig(this.array_Size*2);
         }
@@ -31,7 +31,7 @@ public class ArrayDeque<T> {
         }
         this.array_Size++;
     }
-    private void addLast(T item) {
+    public void addLast(T item) {
         if (this.array_Size == this.size) {
             resizeBig(this.array_Size*2);
             this.items[this.lastPointer] = item;
@@ -43,13 +43,13 @@ public class ArrayDeque<T> {
         this.array_Size++;
     }
 
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         return this.array_Size == 0;
     }
-    private int size() {
+    public int size() {
         return this.array_Size;
     }
-    private void printDeque() {
+    public void printDeque() {
         String deque = "";
         int start = this.firstPointer + 1;
         for (int i = 0; i < this.size; i++) {
@@ -63,7 +63,7 @@ public class ArrayDeque<T> {
         }
         System.out.println(deque);
     }
-    private T removeFirst() {
+    public T removeFirst() {
         if (this.size > 16 && (double) this.array_Size / this.size < 0.25) {
             resizeSmall(this.array_Size * 4);
         }
@@ -76,7 +76,7 @@ public class ArrayDeque<T> {
         this.array_Size--;
         return holder;
     }
-    private T removeLast() {
+    public T removeLast() {
         if(this.size > 16 && (double) this.array_Size / this.size < 0.25) {
             resizeSmall(this.array_Size * 4);
         }
@@ -90,7 +90,7 @@ public class ArrayDeque<T> {
         return holder;
     }
 
-    private void resizeBig(int new_Size) {
+    public void resizeBig(int new_Size) {
         T[] resized_Items = (T []) new Object[new_Size];
         int start = (this.firstPointer + 1) % this.size;
         for (int i = 0; i < this.size; i++){
@@ -108,7 +108,7 @@ public class ArrayDeque<T> {
         this.lastPointer = this.array_Size;
     }
 
-    private void resizeSmall(int new_Size) {
+    public void resizeSmall(int new_Size) {
         T[] resized_Items = (T []) new Object[new_Size];
         int start = (this.firstPointer + 1) % this.size;
         for (int i = 0; i < this.array_Size; i++) {
@@ -126,7 +126,7 @@ public class ArrayDeque<T> {
         this.lastPointer = this.array_Size;
     }
 
-    private T get(int index) {
+    public T get(int index) {
         int temp = this.firstPointer;
         for (int i = 0; i <= index; i++) {
             temp = (temp + 1) % this.size;
