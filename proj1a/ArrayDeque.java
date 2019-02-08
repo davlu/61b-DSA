@@ -5,13 +5,13 @@ public class ArrayDeque<val> {
     int firstPointer = 4;
     int lastPointer = 5;
     public ArrayDeque(){
-        items = (val []) new Object[8];
+        this.items = (val []) new Object[8];
     }
 
     public ArrayDeque(ArrayDeque other){
         this.items = (val []) new Object[other.size];
         for(int i = 0; i<other.size; i++){
-            items[i] = (val) other.items[i];
+            this.items[i] = (val) other.items[i];
         }
         this.firstPointer = other.firstPointer;
         this.lastPointer = other.lastPointer;
@@ -70,6 +70,9 @@ public class ArrayDeque<val> {
         this.firstPointer = (this.firstPointer+1)%this.size;
         val holder = this.items[this.firstPointer];
         this.items[this.firstPointer] = null;
+        if(array_size == 0){
+            return holder;
+        }
         this.array_size--;
         return holder;
     }
@@ -80,12 +83,15 @@ public class ArrayDeque<val> {
         this.lastPointer = Math.floorMod(this.lastPointer-1, this.size);
         val holder = this.items[this.lastPointer];
         this.items[this.lastPointer] = null;
+        if(this.array_size == 0){
+            return holder;
+        }
         this.array_size--;
         return holder;
     }
     public void resizeSmall(int new_size){
         val[] resized_items = (val []) new Object[this.array_size];
-        int start = this.firstPointer+1;
+        int start = (this.firstPointer+1)%this.size;
         for(int i = 0; i < this.size; i++){
             resized_items[i] = this.items[start];
             if (start == this.size-1){
@@ -103,7 +109,7 @@ public class ArrayDeque<val> {
 
     public void resizeBig(int new_size){
         val[] resized_items = (val []) new Object[new_size];
-        int start = this.firstPointer+1;
+        int start = (this.firstPointer+1)%this.size;
         for(int i = 0; i < this.size; i++){
             resized_items[i] = this.items[start];
             if(start == this.size-1){
@@ -119,10 +125,10 @@ public class ArrayDeque<val> {
         this.lastPointer = this.array_size;
     }
     public val get(int index){
-        int temp = firstPointer;
+        int temp = this.firstPointer;
         for(int i = 0; i <= index; i++){
             temp = (temp+1)%this.size;
         }
-        return items[temp];
+        return this.items[temp];
     }
 }
