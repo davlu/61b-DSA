@@ -136,5 +136,4 @@ public class ArrayDeque<T> {
         }
         return this.items[temp];
     }
-    
 }
