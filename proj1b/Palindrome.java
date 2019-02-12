@@ -9,7 +9,6 @@ public class Palindrome {
     }
 
     public boolean isPalindrome(String word) {
-        word = word.toLowerCase();
         Palindrome palindrome = new Palindrome();
         Deque palindromeDeque = palindrome.wordToDeque(word);
         Deque palindromeDequeBack = palindrome.wordToDeque(word);
@@ -28,7 +27,6 @@ public class Palindrome {
     public boolean isPalindrome(String word, CharacterComparator cc) {
         int start = 0;
         int end = word.length() - 1;
-        word = word.toLowerCase();
         while ((start < end && word.length() % 2 == 0)
                 || (!(start >= end) && word.length() % 2 != 0)) {
             if (cc.equalChars(word.charAt(start), word.charAt(end))) {
