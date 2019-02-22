@@ -30,10 +30,10 @@ public class Clorus extends Creature{
     }
 
     public void move(){
-        this.energy -= 0.3;
+        this.energy -= 0.03;
     }
     public void  stay(){
-        this.energy -= 0.1;
+        this.energy -= 0.01;
     }
     public void attack(Creature c){
         this.energy += c.energy();
