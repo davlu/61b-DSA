@@ -10,7 +10,7 @@ import huglife.Impassible;
 import huglife.Empty;
 
 /** Tests the plip class
- *  @authr FIXME
+ *  @authr David Lu
  */
 
 public class TestPlip {
@@ -32,10 +32,15 @@ public class TestPlip {
 
     @Test
     public void testReplicate() {
-        // TODO
+        Plip p = new Plip(2);
+        assertEquals(2, p.energy(), 0.01);
+        assertEquals(new Color(99, 255, 76), p.color());
+        Plip offSpring = p.replicate();
+        assertEquals(1,offSpring.energy(), 0.01);
+        assertEquals(1, p.energy(), 0.01);
     }
 
-    //@Test
+    @Test
     public void testChoose() {
 
         // No empty adjacent spaces; stay.
