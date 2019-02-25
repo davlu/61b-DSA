@@ -1,4 +1,6 @@
 package es.datastructur.synthesizer;
+import edu.princeton.cs.introcs.StdAudio;
+
 
 //Note: This file will not compile until you complete task 1 (BoundedQueue).
 public class GuitarString {
@@ -16,6 +18,8 @@ public class GuitarString {
         //       cast the result of this division operation into an int. For
         //       better accuracy, use the Math.round() function before casting.
         //       Your buffer should be initially filled with zeros.
+        int result = (int) (SR / frequency);
+        buffer = new ArrayRingBuffer<Double>(result);
     }
 
 
@@ -27,6 +31,14 @@ public class GuitarString {
         //
         //       Make sure that your random numbers are different from each
         //       other.
+        double r = Math.random() - 0.5;
+        for(int i = 0; i < buffer.fillCount(); i++){
+            buffer.dequeue();
+        }
+        for(int i = 0; i < buffer.capacity(); i++){
+            buffer.enqueue(r);
+            r = Math.random()-0.5;
+        }
     }
 
     /* Advance the simulation one time step by performing one iteration of
@@ -36,12 +48,15 @@ public class GuitarString {
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
+        double first = buffer.dequeue();
+        double next = sample();
+        double newDouble = DECAY * (first+next)/2;
+        buffer.enqueue(newDouble);
     }
 
     /* Return the double at the front of the buffer. */
     public double sample() {
-        // TODO: Return the correct thing.
-        return 0;
+        return buffer.peek();
     }
 }
     // TODO: Remove all comments that say TODO when you're done.
