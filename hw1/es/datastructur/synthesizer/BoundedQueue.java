@@ -1,6 +1,6 @@
 package es.datastructur.synthesizer;
 import java.util.Iterator;
-public interface BoundedQueue<T>{
+public interface BoundedQueue<T> extends Iterable<T>{
     int capacity();     // return size of the buffer
 
     int fillCount();    // return number of items currently in the buffer
@@ -11,6 +11,7 @@ public interface BoundedQueue<T>{
 
     T peek();           // return (but do not delete) item from the front
 
+    Iterator<T> iterator();
     default boolean isEmpty() {
         if (fillCount() == 0) {
             return true;
