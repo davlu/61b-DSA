@@ -92,18 +92,19 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
             start = (start + 1) % rb.length;
             return hold;
         }
+    }
 
-        public boolean equals(Object o) {
-            ArrayRingBuffer other = (ArrayRingBuffer) o;
-            if (other.fillCount() != fillCount()) {
+    @Override
+    public boolean equals(Object o) {
+        ArrayRingBuffer other = (ArrayRingBuffer) o;
+        if (other.fillCount() != fillCount()) {
+            return false;
+        }
+        for (int i = first; i < other.capacity(); i = (i + 1) % other.fillCount()) {
+            if (rb[i] != other.rb[i]) {
                 return false;
             }
-            for (int i = start; i < other.capacity(); i = (i + 1) % other.fillCount()) {
-                if (rb[i] != other.rb[i]) {
-                    return false;
-                }
-            }
-            return true;
         }
+        return true;
     }
 }
