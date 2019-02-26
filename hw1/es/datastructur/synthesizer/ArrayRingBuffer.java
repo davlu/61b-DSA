@@ -1,4 +1,5 @@
 package es.datastructur.synthesizer;
+
 import java.util.Iterator;
 
 //TODO: Make sure to that this class and all of its methods are public
@@ -29,20 +30,20 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      * Adds x to the end of the ring buffer. If there is no room, then
      * throw new RuntimeException("Ring buffer overflow").
      */
-    public int capacity(){
+    public int capacity() {
         return rb.length;
     }
 
-    public int fillCount(){
+    public int fillCount() {
         return fillCount;
     }
 
     public void enqueue(T x) {
-        if(capacity() == fillCount()){
+        if (capacity() == fillCount()) {
             throw new RuntimeException("Ring Buffer overflow");
         }
         rb[last] = x;
-        last = (last+1)%rb.length;
+        last = (last + 1) % rb.length;
         fillCount++;
         return;
     }
@@ -52,12 +53,12 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      * throw new RuntimeException("Ring buffer underflow").
      */
     public T dequeue() {
-        if(fillCount() == 0){
+        if (fillCount() == 0) {
             throw new RuntimeException("Ring Buffer underflow");
         }
         T holder = rb[first];
         rb[first] = null;
-        first = (first+1)%rb.length;
+        first = (first + 1) % rb.length;
         fillCount--;
         return holder;
     }
@@ -67,39 +68,42 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      * throw new RuntimeException("Ring buffer underflow").
      */
     public T peek() {
-        if(fillCount() == 0){
+        if (fillCount() == 0) {
             throw new RuntimeException("Ring Buffer underflow");
         }
         T holder = rb[first];
         return holder;
     }
 
-    public Iterator<T> iterator(){
+    public Iterator<T> iterator() {
         return new ArrayRingBufferIterator();
     }
-    private class ArrayRingBufferIterator implements Iterator<T>{
+
+    private class ArrayRingBufferIterator implements Iterator<T> {
         private int start;
-        public ArrayRingBufferIterator(){
+
+        public ArrayRingBufferIterator() {
             start = first;
         }
-        public boolean hasNext(){
+
+        public boolean hasNext() {
             return start != last;
         }
 
-        public T next(){
+        public T next() {
             T hold = peek();
-            start = (start+1)%rb.length;
+            start = (start + 1) % rb.length;
             return hold;
         }
 
         @Override
-        public boolean equals(Object o){
+        public boolean equals(Object o) {
             ArrayRingBuffer other = (ArrayRingBuffer) o;
-            if(other.fillCount() != fillCount()){
+            if (other.fillCount() != fillCount()) {
                 return false;
             }
-            for(int i = start; i < other.capacity(); i = (i+1)%other.fillCount()){
-                if(rb[i] != other.rb[i]){
+            for (int i = start; i < other.capacity(); i = (i + 1) % other.fillCount()) {
+                if (rb[i] != other.rb[i]) {
                     return false;
                 }
             }
@@ -109,4 +113,4 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
     // TODO: When you get to part 4, implement the needed code to support
     //       iteration and equals.
 }
-    // TODO: Remove all comments that say TODO when you're done.
+// TODO: Remove all comments that say TODO when you're done.
