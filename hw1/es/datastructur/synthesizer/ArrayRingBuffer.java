@@ -38,6 +38,9 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
     }
 
     public void enqueue(T x) {
+        if(capacity() == fillCount()){
+            throw new RuntimeException("Ring Buffer overflow");
+        }
         rb[last] = x;
         last = (last+1)%rb.length;
         fillCount++;
@@ -49,6 +52,9 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      * throw new RuntimeException("Ring buffer underflow").
      */
     public T dequeue() {
+        if(fillCount() == 0){
+            throw new RuntimeException("Ring Buffer underflow");
+        }
         T holder = rb[first];
         rb[first] = null;
         first = (first+1)%rb.length;
@@ -61,10 +67,45 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
      * throw new RuntimeException("Ring buffer underflow").
      */
     public T peek() {
+        if(fillCount() == 0){
+            throw new RuntimeException("Ring Buffer underflow");
+        }
         T holder = rb[first];
         return holder;
     }
 
+    public Iterator<T> iterator(){
+        return new ArrayRingBufferIterator();
+    }
+    private class ArrayRingBufferIterator implements Iterator<T>{
+        private int start;
+        public ArrayRingBufferIterator(){
+            start = first;
+        }
+        public boolean hasNext(){
+            return start != last;
+        }
+
+        public T next(){
+            T hold = peek();
+            start = (start+1)%rb.length;
+            return hold;
+        }
+
+        @Override
+        public boolean equals(Object o){
+            ArrayRingBuffer other = (ArrayRingBuffer) o;
+            if(other.fillCount() != fillCount()){
+                return false;
+            }
+            for(int i = start; i < other.capacity(); i = (i+1)%other.fillCount()){
+                if(rb[i] != other.rb[i]){
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
     // TODO: When you get to part 4, implement the needed code to support
     //       iteration and equals.
 }
