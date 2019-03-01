@@ -7,8 +7,8 @@ public class UnionFind {
         set = new int[n];
         size = new int[n];
         for (int i = 0; i < n ; i++) {
-            set[n] = -1;
-            size[n] = 1;
+            set[i] = -1;
+            size[i] = 1;
         }
     }
 
