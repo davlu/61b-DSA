@@ -1,37 +1,29 @@
 public class UnionFind {
 
-    // TODO - Add instance variables?
     int[] set;
-    /* Creates a UnionFind data structure holding n vertices. Initially, all
-       vertices are in disjoint sets. */
+    int[] size;
+
     public UnionFind(int n) {
         set = new int[n];
-        for(int i =0 ; i<n-1; i++){
+        size = new int[n];
+        for (int i = 0; i < n - 1; i++) {
             set[n] = -1;
+            size[n] = 1;
         }
     }
 
-    /* Throws an exception if v1 is not a valid index. */
     private void validate(int vertex) {
-        boolean validated = vertex <= set.length-1 && vertex >= 0;
-        if(!validated){
+        boolean validated = vertex <= set.length - 1 && vertex >= 0;
+        if (!validated) {
             throw new IllegalArgumentException("v1 is not a valid index");
-        }
-        else{
+        } else {
             return;
         }
     }
 
-    /* Returns the size of the set v1 belongs to. */
     public int sizeOf(int v1) {
         validate(v1);
-        int size = 0;
-        for(int i = 0; i < set.length; i++){
-            if(find(i) == find(v1)){
-                size ++;
-            }
-        }
-        return size;
+        return size[v1];
     }
 
     /* Returns the parent of v1. If v1 is the root of a tree, returns the
@@ -39,7 +31,7 @@ public class UnionFind {
     public int parent(int v1) {
         validate(v1);
         int parent = set[v1];
-        if(parent != -1){
+        if (parent != -1) {
             return parent;
         }
         return -1;
@@ -47,7 +39,7 @@ public class UnionFind {
 
     /* Returns true if nodes v1 and v2 are connected. */
     public boolean connected(int v1, int v2) {
-        if(find(v1)==find(v2)){
+        if (find(v1) == find(v2)) {
             return true;
         }
         return false;
@@ -61,13 +53,14 @@ public class UnionFind {
     public void union(int v1, int v2) {
         validate(v1);
         validate(v2);
+        size[v1]++;
+        size[v2]++;
         int size1 = sizeOf(v1);
         int size2 = sizeOf(v2);
-        if(size1<size2){
+        if (size1 < size2) {
             int parent = parent(v1);
             set[parent] = find(v2);
-        }
-        else{
+        } else {
             int parent = parent(v2);
             set[parent] = find(v1);
         }
@@ -78,10 +71,9 @@ public class UnionFind {
     public int find(int vertex) {
         validate(vertex);
         int rootVal = set[vertex];
-        if(rootVal == -1){
+        if (rootVal == -1) {
             return rootVal;
-        }
-        else{
+        } else {
             return find(set[rootVal]);
         }
     }
