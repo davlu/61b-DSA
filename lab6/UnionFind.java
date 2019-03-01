@@ -39,7 +39,7 @@ public class UnionFind {
 
     /* Returns true if nodes v1 and v2 are connected. */
     public boolean connected(int v1, int v2) {
-        if (find(v1) == find(v2) && (set[v2] != -1 && set[v1] != -1)) {
+        if (find(v1) == find(v2)) {
             return true;
         }
         return false;
@@ -71,11 +71,11 @@ public class UnionFind {
        allowing for fast search-time. */
     public int find(int vertex) {
         validate(vertex);
-        int rootVal = set[vertex];
-        if (rootVal == -1) {
+        int parentVal = parent(vertex);
+        if (parentVal == -1) {
             return vertex;
         } else {
-            return find(rootVal);
+            return find(parentVal);
         }
     }
 
