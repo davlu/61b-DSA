@@ -53,8 +53,6 @@ public class UnionFind {
     public void union(int v1, int v2) {
         validate(v1);
         validate(v2);
-        size[v1]++;
-        size[v2]++;
         int size1 = sizeOf(v1);
         int size2 = sizeOf(v2);
         if(connected(v1,v2)){
@@ -65,6 +63,8 @@ public class UnionFind {
         } else {
             set[v1] = find(v2);
         }
+        size[v1]++;
+        size[v2]++;
     }
 
     /* Returns the root of the set V belongs to. Path-compression is employed
@@ -75,7 +75,7 @@ public class UnionFind {
         if (rootVal == -1) {
             return vertex;
         } else {
-            return find(set[rootVal]);
+            return find(rootVal);
         }
     }
 
