@@ -57,6 +57,9 @@ public class UnionFind {
         size[v2]++;
         int size1 = sizeOf(v1);
         int size2 = sizeOf(v2);
+        if(connected(v1,v2)){
+            return;
+        }
         if (size2 > size1) {
             set[v2] = find(v1);
         } else {
@@ -70,7 +73,7 @@ public class UnionFind {
         validate(vertex);
         int rootVal = set[vertex];
         if (rootVal == -1) {
-            return rootVal;
+            return vertex;
         } else {
             return find(set[rootVal]);
         }
