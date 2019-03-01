@@ -39,7 +39,7 @@ public class UnionFind {
 
     /* Returns true if nodes v1 and v2 are connected. */
     public boolean connected(int v1, int v2) {
-        if (find(v1) == find(v2)) {
+        if (find(v1) == find(v2) && (set[v2] != -1 && set[v1] != -1)) {
             return true;
         }
         return false;
@@ -57,12 +57,10 @@ public class UnionFind {
         size[v2]++;
         int size1 = sizeOf(v1);
         int size2 = sizeOf(v2);
-        if (size1 < size2) {
-            int parent = parent(v1);
-            set[parent] = find(v2);
+        if (size2 > size1) {
+            set[v2] = find(v1);
         } else {
-            int parent = parent(v2);
-            set[parent] = find(v1);
+            set[v1] = find(v2);
         }
     }
 
