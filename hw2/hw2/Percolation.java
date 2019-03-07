@@ -1,7 +1,5 @@
 package hw2;
-
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-
 public class Percolation {
     // create N-by-N grid, with all sites initially blocked
     private boolean[] openGrid;
@@ -39,15 +37,13 @@ public class Percolation {
             this.copyGrid[helperIndex(row, col)] = true;
             openSites++;
         }
-        if(row == 0){
+        if (row == 0) {
             uf.union(topWaterVal, helperIndex(0, col));
             copyUnion.union(topWaterVal, helperIndex(row, col));
         }
-
-        if(row == N-1){
+        if (row == N - 1) {
             uf.union(bottomVal, helperIndex(row, col));
         }
-
         if (row + 1 < N && isOpen(row + 1, col)) {
             this.uf.union(helperIndex(row, col), helperIndex(row + 1, col));
             this.copyUnion.union(helperIndex(row, col), helperIndex(row + 1, col));
@@ -78,6 +74,9 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         if (row < 0 || row >= N || col >= N || col < 0) {
             throw new java.lang.IndexOutOfBoundsException();
+        }
+        if(!isOpen(row,col)){
+            return false;
         }
         if (isOpen(row, col) && row == N - 1) {
             if (col - 1 < 0) {
@@ -116,13 +115,9 @@ public class Percolation {
         return N * row + col;
     }
 
-
     // use for unit testing (not required, but keep this here for the autograder)
     public static void main(String[] args) {
         Percolation p = new Percolation(1);
-        for (int i = 0; i < 1; i++) {
-            p.open(i, 2);
-        }
-        p.open(9, 5);
+        System.out.println(p.isOpen(0,0));
     }
 }
