@@ -5,12 +5,13 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
     // create N-by-N grid, with all sites initially blocked
     private boolean[] openGrid;
+    private boolean[] copyGrid;
     private int N;
     private int openSites;
     private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF copyUnion;
     private int topWaterVal;
     private int bottomVal;
-    private int secretVal;
 
     public Percolation(int N) {
         if (0 >= N) {
@@ -19,11 +20,13 @@ public class Percolation {
         this.N = N;
         topWaterVal = N*N;
         bottomVal = N*N+1;
-        secretVal = N*N+2;
-        this.uf = new WeightedQuickUnionUF(N * N+3);
+        this.uf = new WeightedQuickUnionUF(N * N+2);
+        this.copyUnion = new WeightedQuickUnionUF(N*N+1);
         this.openGrid = new boolean[N * N];
+        this.copyGrid = new boolean[N * N];
         for (int i = 0; i < N; i++) {
             uf.union(topWaterVal, helperIndex(0, i));
+            copyUnion.union(topWaterVal, helperIndex(0,i));
         }
         for (int i = 0; i < N; i++) {
             uf.union(bottomVal, helperIndex(N-1, i));
@@ -40,22 +43,24 @@ public class Percolation {
         }
         if (!isOpen(row, col)) {
             this.openGrid[helperIndex(row, col)] = true;
+            this.copyGrid[helperIndex(row, col)] = true;
             openSites++;
         }
         if (row + 1 < N && isOpen(row + 1, col)) {
             this.uf.union(helperIndex(row, col), helperIndex(row + 1, col));
+            this.copyUnion.union(helperIndex(row, col), helperIndex(row + 1, col));
         }
         if (col + 1 < N && isOpen(row, col + 1)) {
             this.uf.union(helperIndex(row, col), helperIndex(row, col + 1));
+            this.copyUnion.union(helperIndex(row, col), helperIndex(row, col + 1));
         }
         if (row - 1 >= 0 && isOpen(row - 1, col)) {
             this.uf.union(helperIndex(row, col), helperIndex(row - 1, col));
+            this.copyUnion.union(helperIndex(row, col), helperIndex(row - 1, col));
         }
         if (col - 1 >= 0 && isOpen(row, col - 1)) {
             this.uf.union(helperIndex(row, col), helperIndex(row, col - 1));
-        }
-        if (row == N-1 && this.uf.connected(helperIndex(row, col), topWaterVal)){
-            this.uf.union(secretVal, helperIndex(row,col));
+            this.copyUnion.union(helperIndex(row, col), helperIndex(row, col - 1));
         }
     }
 
@@ -73,10 +78,18 @@ public class Percolation {
             throw new java.lang.IndexOutOfBoundsException();
         }
         if(isOpen(row, col) && row == N-1){
-            return uf.connected(helperIndex(row, col), topWaterVal) && uf.connected(helperIndex(row, col), secretVal);
+            if(col-1 < 0){
+                return isFull(row-1, col) || (isOpen(row, col+1) && isFull(row, col+1));
+            }
+            else if (col+1 == N){
+                return isFull(row-1, col) ||(isOpen(row, col-1) && isFull(row, col-1));
+            }
+            else{
+                return isFull(row-1, col) || (isOpen(row, col-1) && isFull(row, col-1)) ||(isOpen(row, col+1) && isFull(row, col+1));
+            }
         }
         if(isOpen(row,col)){
-            return uf.connected(helperIndex(row, col), topWaterVal);
+            return copyUnion.connected(helperIndex(row, col), topWaterVal);
         }
         return false;
     }
