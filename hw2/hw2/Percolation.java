@@ -1,5 +1,7 @@
 package hw2;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
 public class Percolation {
     // create N-by-N grid, with all sites initially blocked
     private boolean[] openGrid;
@@ -75,20 +77,20 @@ public class Percolation {
         if (row < 0 || row >= N || col >= N || col < 0) {
             throw new java.lang.IndexOutOfBoundsException();
         }
-        if(!isOpen(row,col)){
+        if (!isOpen(row, col)) {
             return false;
         }
         if (isOpen(row, col) && row == N - 1 && (row != 0 && col != 0)) {
             if (col - 1 < 0) {
-                return isFull(row - 1, col) || (isOpen(row, col + 1) &&
-                        copyUnion.connected(helperIndex(row, col + 1), topWaterVal));
+                return isFull(row - 1, col) || (isOpen(row, col + 1)
+                        && copyUnion.connected(helperIndex(row, col + 1), topWaterVal));
             } else if (col + 1 == N) {
-                return isFull(row - 1, col) || (isOpen(row, col - 1) &&
-                        copyUnion.connected(helperIndex(row, col - 1), topWaterVal));
+                return isFull(row - 1, col) || (isOpen(row, col - 1)
+                        && copyUnion.connected(helperIndex(row, col - 1), topWaterVal));
             } else {
-                return isFull(row - 1, col) || (isOpen(row, col - 1) &&
-                        copyUnion.connected(helperIndex(row, col - 1), topWaterVal) ||
-                        (isOpen(row, col + 1) && copyUnion.connected(helperIndex(row, col + 1),
+                return isFull(row - 1, col) || (isOpen(row, col - 1)
+                        && copyUnion.connected(helperIndex(row, col - 1), topWaterVal)
+                        || (isOpen(row, col + 1) && copyUnion.connected(helperIndex(row, col + 1),
                                 topWaterVal)));
             }
         }
@@ -118,6 +120,6 @@ public class Percolation {
     // use for unit testing (not required, but keep this here for the autograder)
     public static void main(String[] args) {
         Percolation p = new Percolation(1);
-        System.out.println(p.isOpen(0,0));
+        System.out.println(p.isOpen(0, 0));
     }
 }
