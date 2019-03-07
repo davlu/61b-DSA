@@ -5,13 +5,13 @@ import edu.princeton.cs.introcs.StdStats;
 
 
 public class PercolationStats {
-    private double[] values;
 
+    private double[] values;
     public PercolationStats(int N, int T, PercolationFactory pf) {
         if (N <= 0 || T <= 0) {
             throw new java.lang.IllegalArgumentException();
         }
-        double[] values = new double[T];
+        this.values = new double[T];
         for (int i = 0; i < T; i++) {
             Percolation newPercolation = pf.make(N);
             boolean percolated = false;
@@ -20,7 +20,7 @@ public class PercolationStats {
                 percolated = newPercolation.percolates();
             }
             int openSites = newPercolation.numberOfOpenSites();
-            values[i] = (double) openSites / (N * N);
+            values[i] = (double) openSites / Math.pow(N, 2.0);
         }
     }// perform T independent experiments on an N-by-N grid
 
@@ -37,7 +37,7 @@ public class PercolationStats {
     }// sample standard deviation of percolation threshold
 
     public double confidenceLow() {
-        return this.mean() - (1.96 * values.length) / (Math.pow(values.length, 0.5));
+        return this.mean() - (1.96 * this.values.length) / (Math.pow(this.values.length, 0.5));
     }// low endpoint of 95% confidence interval
 
     public double confidenceHigh() {
