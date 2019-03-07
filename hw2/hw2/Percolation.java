@@ -78,7 +78,7 @@ public class Percolation {
         if(!isOpen(row,col)){
             return false;
         }
-        if (isOpen(row, col) && row == N - 1) {
+        if (isOpen(row, col) && row == N - 1 && (row != 0 && col != 0)) {
             if (col - 1 < 0) {
                 return isFull(row - 1, col) || (isOpen(row, col + 1) &&
                         copyUnion.connected(helperIndex(row, col + 1), topWaterVal));
