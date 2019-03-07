@@ -18,18 +18,18 @@ public class Percolation {
             throw new java.lang.IllegalArgumentException();
         }
         this.N = N;
-        topWaterVal = N*N;
-        bottomVal = N*N+1;
-        this.uf = new WeightedQuickUnionUF(N * N+2);
-        this.copyUnion = new WeightedQuickUnionUF(N*N+1);
+        topWaterVal = N * N;
+        bottomVal = N * N + 1;
+        this.uf = new WeightedQuickUnionUF(N * N + 2);
+        this.copyUnion = new WeightedQuickUnionUF(N * N + 1);
         this.openGrid = new boolean[N * N];
         this.copyGrid = new boolean[N * N];
         for (int i = 0; i < N; i++) {
             uf.union(topWaterVal, helperIndex(0, i));
-            copyUnion.union(topWaterVal, helperIndex(0,i));
+            copyUnion.union(topWaterVal, helperIndex(0, i));
         }
         for (int i = 0; i < N; i++) {
-            uf.union(bottomVal, helperIndex(N-1, i));
+            uf.union(bottomVal, helperIndex(N - 1, i));
         }
     }
 
@@ -77,18 +77,16 @@ public class Percolation {
         if (row < 0 || row >= N || col >= N || col < 0) {
             throw new java.lang.IndexOutOfBoundsException();
         }
-        if(isOpen(row, col) && row == N-1){
-            if(col-1 < 0){
-                return isFull(row-1, col) || (isOpen(row, col+1) && isFull(row, col+1));
-            }
-            else if (col+1 == N){
-                return isFull(row-1, col) ||(isOpen(row, col-1) && isFull(row, col-1));
-            }
-            else{
-                return isFull(row-1, col) || (isOpen(row, col-1) && isFull(row, col-1)) ||(isOpen(row, col+1) && isFull(row, col+1));
+        if (isOpen(row, col) && row == N - 1) {
+            if (col - 1 < 0) {
+                return isFull(row - 1, col) || (isOpen(row, col + 1) && isFull(row, col + 1));
+            } else if (col + 1 == N) {
+                return isFull(row - 1, col) || (isOpen(row, col - 1) && isFull(row, col - 1));
+            } else {
+                return isFull(row - 1, col) || (isOpen(row, col - 1) && isFull(row, col - 1)) || (isOpen(row, col + 1) && isFull(row, col + 1));
             }
         }
-        if(isOpen(row,col)){
+        if (isOpen(row, col)) {
             return copyUnion.connected(helperIndex(row, col), topWaterVal);
         }
         return false;
@@ -101,7 +99,7 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return uf.connected(topWaterVal,bottomVal);
+        return uf.connected(topWaterVal, bottomVal);
     }
 
     public int helperIndex(int row, int col) {
@@ -115,7 +113,7 @@ public class Percolation {
     // use for unit testing (not required, but keep this here for the autograder)
     public static void main(String[] args) {
         Percolation p = new Percolation(10);
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             p.open(i, 2);
         }
         p.open(9, 5);
