@@ -24,13 +24,6 @@ public class Percolation {
         this.copyUnion = new WeightedQuickUnionUF(N * N + 1);
         this.openGrid = new boolean[N * N];
         this.copyGrid = new boolean[N * N];
-        for (int i = 0; i < N; i++) {
-            uf.union(topWaterVal, helperIndex(0, i));
-            copyUnion.union(topWaterVal, helperIndex(0, i));
-        }
-        for (int i = 0; i < N; i++) {
-            uf.union(bottomVal, helperIndex(N - 1, i));
-        }
     }
 
     // open the site (row, col) if it is not open already
@@ -46,6 +39,15 @@ public class Percolation {
             this.copyGrid[helperIndex(row, col)] = true;
             openSites++;
         }
+        if(row == 0){
+            uf.union(topWaterVal, helperIndex(0, col));
+            copyUnion.union(topWaterVal, helperIndex(row, col));
+        }
+
+        if(row == N-1){
+            uf.union(bottomVal, helperIndex(row, col));
+        }
+
         if (row + 1 < N && isOpen(row + 1, col)) {
             this.uf.union(helperIndex(row, col), helperIndex(row + 1, col));
             this.copyUnion.union(helperIndex(row, col), helperIndex(row + 1, col));
@@ -117,8 +119,8 @@ public class Percolation {
 
     // use for unit testing (not required, but keep this here for the autograder)
     public static void main(String[] args) {
-        Percolation p = new Percolation(10);
-        for (int i = 0; i < 10; i++) {
+        Percolation p = new Percolation(1);
+        for (int i = 0; i < 1; i++) {
             p.open(i, 2);
         }
         p.open(9, 5);
