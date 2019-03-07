@@ -10,6 +10,7 @@ public class Percolation {
     private WeightedQuickUnionUF uf;
     private int topWaterVal;
     private int bottomVal;
+    private int secretVal;
 
     public Percolation(int N) {
         if (0 >= N) {
@@ -18,7 +19,8 @@ public class Percolation {
         this.N = N;
         topWaterVal = N*N;
         bottomVal = N*N+1;
-        this.uf = new WeightedQuickUnionUF(N * N+2);
+        secretVal = N*N+2;
+        this.uf = new WeightedQuickUnionUF(N * N+3);
         this.openGrid = new boolean[N * N];
         for (int i = 0; i < N; i++) {
             uf.union(topWaterVal, helperIndex(0, i));
@@ -52,6 +54,9 @@ public class Percolation {
         if (col - 1 >= 0 && isOpen(row, col - 1)) {
             this.uf.union(helperIndex(row, col), helperIndex(row, col - 1));
         }
+        if (row == N-1 && this.uf.connected(helperIndex(row, col), topWaterVal)){
+            this.uf.union(secretVal, helperIndex(row,col));
+        }
     }
 
     // is the site (row, col) open?
@@ -66,6 +71,9 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         if (row < 0 || row >= N || col >= N || col < 0) {
             throw new java.lang.IndexOutOfBoundsException();
+        }
+        if(isOpen(row, col) && row == N-1){
+            return uf.connected(helperIndex(row, col), topWaterVal) && uf.connected(helperIndex(row, col), secretVal);
         }
         if(isOpen(row,col)){
             return uf.connected(helperIndex(row, col), topWaterVal);
