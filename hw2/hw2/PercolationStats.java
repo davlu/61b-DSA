@@ -5,7 +5,7 @@ import edu.princeton.cs.introcs.StdStats;
 
 
 public class PercolationStats {
-    double[] values;
+    private double[] values;
 
     public PercolationStats(int N, int T, PercolationFactory pf) {
         if (N <= 0 || T <= 0) {

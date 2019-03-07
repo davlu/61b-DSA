@@ -79,11 +79,16 @@ public class Percolation {
         }
         if (isOpen(row, col) && row == N - 1) {
             if (col - 1 < 0) {
-                return isFull(row - 1, col) || (isOpen(row, col + 1) && isFull(row, col + 1));
+                return isFull(row - 1, col) || (isOpen(row, col + 1) &&
+                        copyUnion.connected(helperIndex(row, col + 1), topWaterVal));
             } else if (col + 1 == N) {
-                return isFull(row - 1, col) || (isOpen(row, col - 1) && isFull(row, col - 1));
+                return isFull(row - 1, col) || (isOpen(row, col - 1) &&
+                        copyUnion.connected(helperIndex(row, col - 1), topWaterVal));
             } else {
-                return isFull(row - 1, col) || (isOpen(row, col - 1) && isFull(row, col - 1)) || (isOpen(row, col + 1) && isFull(row, col + 1));
+                return isFull(row - 1, col) || (isOpen(row, col - 1) &&
+                        copyUnion.connected(helperIndex(row, col - 1), topWaterVal) ||
+                        (isOpen(row, col + 1) && copyUnion.connected(helperIndex(row, col + 1),
+                                topWaterVal)));
             }
         }
         if (isOpen(row, col)) {
@@ -102,7 +107,7 @@ public class Percolation {
         return uf.connected(topWaterVal, bottomVal);
     }
 
-    public int helperIndex(int row, int col) {
+    private int helperIndex(int row, int col) {
         if (row < 0 || row >= N || col >= N || col < 0) {
             throw new java.lang.IndexOutOfBoundsException();
         }
