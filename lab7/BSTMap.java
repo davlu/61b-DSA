@@ -32,9 +32,6 @@ public class BSTMap<K extends Comparable<K>,V> implements Map61B<K,V> {
      * map contains no mapping for the key.
      */
     public V get(K key){
-        if(!containsKey(key)){
-            return null;
-        }
         return getHelper(key, root);
     }
 
@@ -60,7 +57,7 @@ public class BSTMap<K extends Comparable<K>,V> implements Map61B<K,V> {
 
     /** Associates the specified value with the specified key in this map. */
     public void put(K key, V value){
-        helperInsert(root, key, value);
+        root = helperInsert(root, key, value);
         size++;
     }
 
