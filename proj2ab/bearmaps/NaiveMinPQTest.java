@@ -1,13 +1,14 @@
 package bearmaps;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ArrayHeapMinPQTest {
+public class NaiveMinPQTest {
     @Test
     public void addRemoveGenericTest(){
-        ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
+        NaiveMinPQ testPQ = new NaiveMinPQ();
         testPQ.add("Long Sword", 350.0);
         assertTrue(testPQ.contains("Long Sword"));
 
@@ -32,9 +33,8 @@ public class ArrayHeapMinPQTest {
 
     @Test
     public void samePriorityTest(){
-        ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
+        NaiveMinPQ testPQ = new NaiveMinPQ();
         testPQ.add("Long Sword", 350.0);
-        testPQ.add("Long Jier", 350.0);
-        testPQ.add("Long Jier", 350.0);
+        testPQ.removeSmallest();
     }
 }

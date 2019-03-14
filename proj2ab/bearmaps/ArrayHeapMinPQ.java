@@ -62,8 +62,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
                 smaller = rightChildIndex(k);
             }
         }
-        swap(smaller, k);
-        sink(smaller);
+        if(itemValueMap.get(items.get(smaller)).compareTo(itemValueMap.get(items.get(k))) < 0){
+            swap(smaller, k);
+            sink(smaller);
+        }
     }
     private int leftChildIndex(int k){
         return k*2;
@@ -88,9 +90,15 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     public T removeSmallest(){
+        if(this.size() == 0){
+            throw new NoSuchElementException("The PQ is empty");
+        }
         T removed = items.get(1);
         swap(1, nextOpen-1);
         items.remove(nextOpen-1);
+        itemValueMap.remove(removed);
+        size--;
+        nextOpen--;
         sink(1);
         return removed;
     }
