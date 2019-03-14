@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
-    private ArrayList<Node> items;
+    private ArrayList<T> items;
     private HashMap<T, Node> itemValueMap;
     private int nextOpen;
     private int size;
@@ -37,26 +37,30 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             throw new IllegalArgumentException("This item is already in the PQ.");
         }
         Node addedItem = new Node(item, priority);
-        items.add(addedItem);
+        items.add(item);
         itemValueMap.put(item, addedItem);
         swim(nextOpen);
         nextOpen++;
         size++;
     }
     public void swap(int index1, int index2){
-        Node temp = items.get(index1);
+        T temp = items.get(index1);
         items.set(index1, items.get(index2));
         items.set(index2, temp);
     }
     public void swim(int k){
-        if(items.get(parentIndex(k)).compareTo(items.get(k)) > 0){
+        T parentItem = items.get(parentIndex(k));
+        T currentItem = items.get(k);
+        if(itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0){
             swap(parentIndex(k), k);
             swim(parentIndex(k));
         }
     }
     public void sink(int k){
         int smaller;
-        if(items.get(rightChildIndex(k)).compareTo(items.get(leftChildIndex(k))) > 0){
+        T rightItem = items.get(rightChildIndex(k));
+        T leftItem = items.get(leftChildIndex(k));
+        if(itemValueMap.get(rightItem).compareTo(itemValueMap.get(leftItem)) > 0){
             smaller = leftChildIndex(k);
         }
         else{
@@ -84,11 +88,15 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if(this.size() == 0){
             throw new NoSuchElementException("The PQ is empty");
         }
-        return (T) items.get(1);
+        return items.get(1);
     }
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     public T removeSmallest(){
-
+        T removed = items.get(1);
+        swap(1, nextOpen-1);
+        items.remove(nextOpen-1);
+        sink(1);
+        return removed;
     }
     /* Returns the number of items in the PQ. */
     public int size(){
@@ -97,6 +105,11 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /* Changes the priority of the given item. Throws NoSuchElementException if the item
      * doesn't exist. */
     public void changePriority(T item, double priority){
-
+        if(!contains(item)){
+            throw new NoSuchElementException("Item does not exist in PQ.");
+        }
+        itemValueMap.remove(item);
+        Node newPriorityItem = new Node(item, priority);
+        itemValueMap.put(item, newPriorityItem);
     }
 }
