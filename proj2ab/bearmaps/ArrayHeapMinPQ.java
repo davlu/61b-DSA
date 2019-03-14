@@ -1,18 +1,18 @@
 package bearmaps;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
-    /* Adds an item with the given priority value. Throws an
-     * IllegalArgumentExceptionb if item is already present. */
     private ArrayList<Node> items;
-    private int rootIndex;
+    private HashMap<T, Node> itemValueMap;
     private int nextOpen;
     private int size;
     public ArrayHeapMinPQ(){
-        items = new ArrayList<Node>();
+        items = new ArrayList<>();
+        itemValueMap = new HashMap<>();
         items.add(null);
-        rootIndex = 1;
         nextOpen = 1;
     }
     private class Node implements Comparable<Node>{
@@ -30,10 +30,18 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             return Double.compare(this.priority, o.priority);
         }
     }
+    /* Adds an item with the given priority value. Throws an
+     * IllegalArgumentException if item is already present. */
     public void add(T item, double priority){ /** if same value, first one is "smaller" than other**/
-        items.add(new Node(item, priority));
+        if(contains(item)){
+            throw new IllegalArgumentException("This item is already in the PQ.");
+        }
+        Node addedItem = new Node(item, priority);
+        items.add(addedItem);
+        itemValueMap.put(item, addedItem);
         swim(nextOpen);
-        nextOpen += 1;
+        nextOpen++;
+        size++;
     }
     public void swap(int index1, int index2){
         Node temp = items.get(index1);
@@ -67,20 +75,16 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         return k/2;
     }
 
-
-
-
-
-
-
-
     /* Returns true if the PQ contains the given item. */
     public boolean contains(T item){
-
+        return itemValueMap.containsKey(item);
     }
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     public T getSmallest(){
-
+        if(this.size() == 0){
+            throw new NoSuchElementException("The PQ is empty");
+        }
+        return (T) items.get(1);
     }
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     public T removeSmallest(){
