@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     private ArrayList<T> items;
-    private HashMap<T, Node> itemValueMap;
+    private HashMap<T, Double> itemValueMap;
     private int nextOpen;
     private int size;
     public ArrayHeapMinPQ(){
@@ -15,40 +15,28 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         items.add(null);
         nextOpen = 1;
     }
-    private class Node implements Comparable<Node>{
-        private T item;
-        private double priority;
-        public Node(T i, double p){
-            this.item = i;
-            this.priority = p;
-        }
-        @Override
-        public int compareTo(Node o) {
-            if (o == null) {
-                return -1;
-            }
-            return Double.compare(this.priority, o.priority);
-        }
-    }
+
     /* Adds an item with the given priority value. Throws an
      * IllegalArgumentException if item is already present. */
     public void add(T item, double priority){ /** if same value, first one is "smaller" than other**/
         if(contains(item)){
             throw new IllegalArgumentException("This item is already in the PQ.");
         }
-        Node addedItem = new Node(item, priority);
         items.add(item);
-        itemValueMap.put(item, addedItem);
+        itemValueMap.put(item, priority);
         swim(nextOpen);
         nextOpen++;
         size++;
     }
-    public void swap(int index1, int index2){
+    private void swap(int index1, int index2){
         T temp = items.get(index1);
         items.set(index1, items.get(index2));
         items.set(index2, temp);
     }
-    public void swim(int k){
+    private void swim(int k){
+        if(parentIndex(k) == 0){
+            return;
+        }
         T parentItem = items.get(parentIndex(k));
         T currentItem = items.get(k);
         if(itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0){
@@ -56,26 +44,34 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             swim(parentIndex(k));
         }
     }
-    public void sink(int k){
+    private void sink(int k){
         int smaller;
-        T rightItem = items.get(rightChildIndex(k));
-        T leftItem = items.get(leftChildIndex(k));
-        if(itemValueMap.get(rightItem).compareTo(itemValueMap.get(leftItem)) > 0){
+        if(leftChildIndex(k) > size()){
+            return;
+        }
+        else if(rightChildIndex(k) > size()){
             smaller = leftChildIndex(k);
         }
         else{
-            smaller = rightChildIndex(k);
+            T rightItem = items.get(rightChildIndex(k));
+            T leftItem = items.get(leftChildIndex(k));
+            if(itemValueMap.get(rightItem).compareTo(itemValueMap.get(leftItem)) > 0){
+                smaller = leftChildIndex(k);
+            }
+            else{
+                smaller = rightChildIndex(k);
+            }
         }
         swap(smaller, k);
         sink(smaller);
     }
-    public int leftChildIndex(int k){
+    private int leftChildIndex(int k){
         return k*2;
     }
-    public int rightChildIndex(int k){
+    private int rightChildIndex(int k){
         return k*2 + 1;
     }
-    public int parentIndex(int k){
+    private int parentIndex(int k){
         return k/2;
     }
 
@@ -109,7 +105,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             throw new NoSuchElementException("Item does not exist in PQ.");
         }
         itemValueMap.remove(item);
-        Node newPriorityItem = new Node(item, priority);
-        itemValueMap.put(item, newPriorityItem);
+        itemValueMap.put(item, priority);
     }
 }
