@@ -37,4 +37,18 @@ public class NaiveMinPQTest {
         testPQ.add("Long Sword", 350.0);
         testPQ.removeSmallest();
     }
+
+    @Test
+    public void changePriorityTest(){
+        NaiveMinPQ testPQ = new NaiveMinPQ();
+        testPQ.add("Long Sword", 350.0);
+        assertTrue(testPQ.contains("Long Sword"));
+
+        testPQ.add("Ruby Crystal", 400.0);
+        assertEquals(2, testPQ.size());
+        testPQ.changePriority("Long Sword", 400);
+        assertEquals("Long Sword", testPQ.getSmallest());
+        testPQ.changePriority("Long Sword", 450);
+        assertEquals("Ruby Crystal", testPQ.getSmallest());
+    }
 }
