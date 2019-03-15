@@ -1,16 +1,14 @@
 import java.util.*;
 
 public class MyHashMap<K,V> implements Map61B<K,V> {
-    private int initialSize;
-    private double loadFactor;
+    private int initialSize = 16;
+    private double loadFactor = 0.75;
     private int size;
-    private Node[] table;
-    private Set<K> keySet;
+    private ArrayList<Node>[] table;
+    private HashSet<K> keys;
     public MyHashMap(){
-        this.initialSize = 16;
-        this.loadFactor = 0.75;
-        table = (Node[]) new Object[initialSize];
-        keySet = new HashSet<>();
+        table = (ArrayList<Node>[]) new ArrayList[initialSize];
+        keys = new HashSet<>();
     }
     public MyHashMap(int initialSize){
         this.initialSize = initialSize;
@@ -19,48 +17,39 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
         this.initialSize = initialSize;
         this.loadFactor = loadFactor;
     }
-    public int hashIndex(int hashCode){
-        return hashCode%initialSize;
+    public int hashIndex(K item, int size){
+        return Math.floorMod(item.hashCode(), size);
     }
-    public void clear(){
-        table = (Node[]) new Object[initialSize];
+    public void clear(){           //
+        this.table = (ArrayList<Node>[]) new ArrayList[initialSize];
+        this.size = 0;
+        this.keys = new HashSet<K>();
     }
-    private class Node{
-
-        /**
-         * Stores KEY as the key in this key-value pair, VAL as the value, and
-         * NEXT as the next node in the linked list.
-         */
-        Node(K k, V v, Node n) {
+    private class Node{            //
+        K key;
+        V val;
+        Node(K k, V v) {
             key = k;
             val = v;
-            next = n;
         }
-        /**
-         * Returns the Entry in this linked list of key-value pairs whose key
-         * is equal to KEY, or null if no such Entry exists.
-         */
-        Node get(K k) {
-            if (k != null && k.equals(key)) {
-                return this;
-            }
-            if (next == null) {
-                return null;
-            }
-            return next.get(k);
-        }
-        /** Stores the key of the key-value pair of this node in the list. */
-        K key;
-        /** Stores the value of the key-value pair of this node in the list. */
-        V val;
-        /** Stores the next Entry in the linked list. */
-        Node next;
-    }
-    /** Returns true if this map contains a mapping for the specified key. */
-    public boolean containsKey(K key){
-        return keySet.contains(key);
     }
 
+    /** Returns true if this map contains a mapping for the specified key. */
+    public boolean containsKey(K key){          //
+        return keys.contains(key);
+    }
+    private Node getEntry(K key){
+        int idx = hashIndex(key, this.initialSize);
+        ArrayList<Node>bucket = this.table[idx];
+        if(bucket!=null){
+            for(Node n : bucket){
+                if(n.key.equals(key)){
+                    return n;
+                }
+            }
+        }
+        return null;
+    }
     /**
      * Returns the value to which the specified key is mapped, or null if this
      * map contains no mapping for the key.
@@ -69,7 +58,14 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
         if(!containsKey(key)){
             return null;
         }
-        return table[key.hashCode()%size()].get(key).val;
+        ArrayList<Node> bucket = table[hashIndex(key,this.initialSize)];
+        V found = null;
+        for(Node e : bucket){
+            if(e.key.equals(key)){
+                found = e.val;
+            }
+        }
+        return found;
     }
 
     /** Returns the number of key-value mappings in this map. */
@@ -83,22 +79,49 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
      * the old value is replaced.
      */
     public void put(K key, V value){
-        int hashIndex = hashIndex(key.hashCode());
-        Node addItem = new Node(key, value, null);
-        if(table[hashIndex] == null){
-            table[key.hashCode()] = addItem;
+        if((double)this.size/this.initialSize > this.loadFactor){
+            rehash(initialSize*2);
         }
-        table[Math.floorMod(key.hashCode(),size())].next = addItem;
-        this.keySet.add(key);
-        size++;
+        if(table[hashIndex(key, this.initialSize)] == null){
+            table[hashIndex(key, this.initialSize)] = new ArrayList<Node>();
+        }
+        if(containsKey(key)){
+            ArrayList<Node> bucket = table[hashIndex(key, this.initialSize)];
+            for(Node e : bucket){
+                if(e.key == key){
+                    e.val = value;
+                }
+            }
+        }
+        else {
+            int hashIndex = hashIndex(key, this.initialSize);
+            Node addItem = new Node(key, value);
+            table[hashIndex].add(addItem);
+            this.keys.add(key);
+            this.size++;
+        }
+    }
+
+    private void rehash(int targetSize){
+        ArrayList<Node>[] newMap = (ArrayList<Node>[]) new ArrayList[targetSize];
+        for(K key : this.keys){
+            int index = hashIndex(key, targetSize);
+            ArrayList<Node> bucket = newMap[index];
+            if(bucket== null){
+                bucket = new ArrayList<Node>();
+                newMap[index] = bucket;
+            }
+            bucket.add(getEntry(key));
+        }
+        this.table = newMap;
     }
 
     /** Returns a Set view of the keys contained in this map. */
     public Set<K> keySet(){
-        return this.keySet;
+        return this.keys;
     }
     public Iterator<K> iterator() {
-        return keySet.iterator();
+        return keys.iterator();
     }
     /**
      * Removes the mapping for the specified key from this map if present.
