@@ -50,22 +50,21 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
         }
         return null;
     }
-    /**
-     * Returns the value to which the specified key is mapped, or null if this
-     * map contains no mapping for the key.
-     */
+
     public V get(K key){
         if(!containsKey(key)){
             return null;
         }
-        ArrayList<Node> bucket = table[hashIndex(key,this.initialSize)];
-        V found = null;
-        for(Node e : bucket){
-            if(e.key.equals(key)){
-                found = e.val;
+        int idx = hashIndex(key, this.initialSize);
+        ArrayList<Node> bucket = this.table[idx];
+        if(bucket != null){
+            for(Node e : bucket){
+                if(e.key.equals(key)){
+                    return e.val;
+                }
             }
         }
-        return found;
+        return null;
     }
 
     /** Returns the number of key-value mappings in this map. */
@@ -111,7 +110,10 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
                 bucket = new ArrayList<Node>();
                 newMap[index] = bucket;
             }
-            bucket.add(getEntry(key));
+            Node newEntry = getEntry(key);
+            bucket.add(newEntry);
+            V entry = get(key);
+            Node newEntryW = new Node(key, entry);
         }
         this.table = newMap;
     }
