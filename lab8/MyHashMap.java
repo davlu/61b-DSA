@@ -17,7 +17,7 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
         this.initialSize = initialSize;
         this.loadFactor = loadFactor;
     }
-    public int hashIndex(K item, int size){
+    private int hashIndex(K item, int size){
         return Math.floorMod(item.hashCode(), size);
     }
     public void clear(){           //
