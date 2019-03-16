@@ -47,10 +47,10 @@ public class ArrayHeapMinPQTest {
     @Test
     public void addRemoveTest(){
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
-        for(int i =0; i<1000;i ++){
+        for(int i =0; i<2;i ++){
             testPQ.add(i, i);
         }
-        for(int i= 0; i<1000; i++){
+        for(int i= 0; i<2; i++){
             assertEquals(i, testPQ.removeSmallest());
         }
     }
