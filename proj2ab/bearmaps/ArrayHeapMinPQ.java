@@ -7,13 +7,15 @@ import java.util.NoSuchElementException;
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     private ArrayList<T> items;
     private HashMap<T, Double> itemValueMap;
+    private HashMap<T, Integer> itemIndexMap;
     private int nextOpen;
     private int size;
 
     public ArrayHeapMinPQ() {
         items = new ArrayList<>();
-        itemValueMap = new HashMap<>();
         items.add(null);
+        itemValueMap = new HashMap<>();
+        itemIndexMap = new HashMap<>();
         nextOpen = 1;
     }
 
@@ -25,7 +27,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         items.add(item);
         itemValueMap.put(item, priority);
-        swim(nextOpen);
+        itemIndexMap.put(item, swim(nextOpen));
         nextOpen++;
         size++;
     }
@@ -36,22 +38,25 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         items.set(index2, temp);
     }
 
-    private void swim(int k) {
+    private int swim(int k) {
+        int returnInt = k;
         if (parentIndex(k) == 0) {
-            return;
+            return returnInt;
         }
         T parentItem = items.get(parentIndex(k));
         T currentItem = items.get(k);
         if (itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0) {
             swap(parentIndex(k), k);
-            swim(parentIndex(k));
+            returnInt = swim(parentIndex(k));
         }
+        return returnInt;
     }
 
-    private void sink(int k) {
+    private int sink(int k) {
         int smaller;
+        int returnInt = k;
         if (leftChildIndex(k) > size()) {
-            return;
+            return returnInt;
         } else if (rightChildIndex(k) > size()) {
             smaller = leftChildIndex(k);
         } else {
@@ -65,8 +70,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         if (itemValueMap.get(items.get(smaller)).compareTo(itemValueMap.get(items.get(k))) < 0) {
             swap(smaller, k);
-            sink(smaller);
+            returnInt = sink(smaller);
         }
+        return returnInt;
     }
 
     private int leftChildIndex(int k) {
@@ -100,12 +106,13 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             throw new NoSuchElementException("The PQ is empty");
         }
         T removed = items.get(1);
+        T lastItem = items.get(nextOpen-1);
         swap(1, nextOpen - 1);
         items.remove(nextOpen - 1);
         itemValueMap.remove(removed);
+        itemIndexMap.put(lastItem, sink(1));
         size--;
         nextOpen--;
-        sink(1);
         return removed;
     }
 
@@ -122,6 +129,15 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         itemValueMap.remove(item);
         itemValueMap.put(item, priority);
-        //swim(getItemIndex(item));
+        int currentItemIndex = itemIndexMap.get(item);
+        int parentInd = parentIndex(currentItemIndex);
+        T parentItem = items.get(parentInd);
+        T currentItem = items.get(currentItemIndex);
+        if(itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0){
+            itemIndexMap.put(item, swim(itemIndexMap.get(item)));
+        }
+        else{
+            itemIndexMap.put(item, sink(itemIndexMap.get(item)));
+        }
     }
 }

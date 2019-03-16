@@ -69,13 +69,14 @@ public class ArrayHeapMinPQTest {
         assertEquals("Ruby Crystal", testPQ.getSmallest());
     }
 
-    /** assumes everything works @Test
+    /**@Test
     public void hugeTest(){
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
         NaiveMinPQ testNaivePQ = new NaiveMinPQ();
-        for(int i = 0; i<1000000; i++){  if they have the same priority then this is a testing difficulty
+        for(int i = 0; i<1000000; i++){
             int move = (int) (Math.random()*5);
             if(move ==0){
+
                 testPQ.add();
             }
             else if(move == 1){
@@ -91,33 +92,36 @@ public class ArrayHeapMinPQTest {
 
             }
         }
-    } **/
+    }**/
 
-    /** assumes everything works @Test
+    @Test
     public void timeTest(){
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
         NaiveMinPQ testNaivePQ = new NaiveMinPQ();
         PriorityQueue javaPQ = new PriorityQueue();
+        int million = 1000000;
 
         int startTime = (int) System.currentTimeMillis();
-        for(int i =0; i < 10000000; i++){
+        for(int i =0; i < million; i++){
             testPQ.add(i,3.0);
         }
         int difference = (int) System.currentTimeMillis()-startTime;
         System.out.println("Time taken for your heap implementation: " + difference);
 
         int startTime1 = (int) System.currentTimeMillis();
-        for(int i= 0; i < 10000000; i++){
+        for(int i= 0; i < million; i++){
             testNaivePQ.add(i,3.0);
         }
         int difference1 = (int) System.currentTimeMillis() - startTime1;
         System.out.println("Time taken for Naive implementation: " + difference1);
 
         int startTime2 = (int) System.currentTimeMillis();
-        for(int i= 0; i < 10000000; i++){
+        System.out.println(startTime2);
+        for(int i= 0; i < million; i++){
             javaPQ.add(i);
         }
+        System.out.println((int) System.currentTimeMillis());
         int difference2 = (int) System.currentTimeMillis() - startTime2;
         System.out.println("Time taken for JAVA implementation: " + difference2);
-    }**/
+    }
 }
