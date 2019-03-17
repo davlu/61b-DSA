@@ -152,6 +152,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         sink(itemIndexMap.get(item));
     }
 
+    //hi
     public double returnItemPriority(T item) {
         double val = this.itemValueMap.get(item);
         return val;
