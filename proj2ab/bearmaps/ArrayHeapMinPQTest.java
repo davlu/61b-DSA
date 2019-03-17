@@ -57,55 +57,40 @@ public class ArrayHeapMinPQTest<T, PriorityNode> {
     }
 
     @Test
-    public void changePriorityTest(){
-        ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
-        testPQ.add("Long Sword", 350.0);
-        assertTrue(testPQ.contains("Long Sword"));
-
-        testPQ.add("Ruby Crystal", 400.0);
-        assertEquals(2, testPQ.size());
-        testPQ.changePriority("Long Sword", 400);
-        assertEquals("Long Sword", testPQ.getSmallest());
-        testPQ.changePriority("Long Sword", 450);
-        assertEquals("Ruby Crystal", testPQ.getSmallest());
-    }
-
-    @Test
     public void hugeTest(){
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
         NaiveMinPQ testNaivePQ = new NaiveMinPQ();
+        ArrayList<Integer> addItemList = new ArrayList<>();
+        ArrayList<Double> addPriorityList = new ArrayList<>();
         ArrayList<Integer> knownValues = new ArrayList<>();
-        for(int i =0 ; i<1000000; i++){  /** adding a shit ton of #s**/
-            int randomItem = (int) (Math.random()*1000);
-            double randomPriority = Math.random()*100;
+        for(int i =0 ; i<100; i++){  /** adding a shit ton of #s**/
+            int randomItem = (int) (Math.random()*5);
+            double randomPriority = Math.random()*10;
             if(!testPQ.contains(randomItem)){
                 testPQ.add(randomItem, randomPriority);
                 testNaivePQ.add(randomItem, randomPriority);
                 knownValues.add(randomItem);
+                addItemList.add(randomItem);
+                addPriorityList.add(randomPriority);
             }
         }
 
-        for(int i = 0; i<1000; i++){ //randomly getSmallest + changePriority
-            int move = (int) (Math.random()*2);
-            if(move == 0){ // get the smallest
-                T testPQRemoved = (T) testPQ.getSmallest();
-                T naivePQRemoved =  (T) testNaivePQ.getSmallest();
-                if(!testPQRemoved.equals(naivePQRemoved)){
-                    assertEquals(testPQ.returnItemPriority(testPQRemoved), testNaivePQ.getSmallestPriority(), 0.01);
-                }
-                else{
-                    assertEquals(testPQ.getSmallest(), testNaivePQ.getSmallest());
-                }
-            }
-            else if(move == 1){ //change the priority
-                int randomItem = knownValues.get((int) (Math.random()*knownValues.size()));
-                double randomPriority = Math.random()*100;
-                if(testPQ.contains(randomItem)){
-                    testPQ.changePriority(randomItem, randomPriority);
-                    testNaivePQ.changePriority(randomItem, randomPriority);
-                }
+        ArrayList<Integer> targetItem = new ArrayList<>();
+        ArrayList<Double> targetPriority = new ArrayList<>();
+        for(int i = 0; i<10; i++) { //randomly getSmallest + changePriority
+            int randomItem = knownValues.get((int) (Math.random() * knownValues.size()));
+            double randomPriority = Math.random() * 10;
+            if (testPQ.contains(randomItem)) {
+                testPQ.changePriority(randomItem, randomPriority);
+                testNaivePQ.changePriority(randomItem, randomPriority);
+                targetItem.add(randomItem);
+                targetPriority.add(randomPriority);
             }
         }
+        T smallestPQ = (T) testPQ.getSmallest();
+        T smallestNaivePQ = (T) testNaivePQ.getSmallest();
+        System.out.println(smallestPQ);
+        System.out.println(smallestNaivePQ);
         /**
         for(int i = 0; i<testPQ.size()-1;i++){
             Double testPQRemovedPriority = testPQ.returnItemPriority(testPQ.getSmallest());
@@ -116,6 +101,45 @@ public class ArrayHeapMinPQTest<T, PriorityNode> {
             }
             assertEquals(testPQRemoved, testNaivePQ.removeSmallest());
         }**/
+    }
+
+
+    @Test
+    public void changePriorityTest(){
+        ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
+        NaiveMinPQ testNaivePQ = new NaiveMinPQ();
+        testPQ.add(0, 1.9691);
+        testNaivePQ.add(0, 1.9691);
+        testPQ.add(2,0.2059);
+        testNaivePQ.add(2,0.2059);
+        testPQ.add(4, 3.5868817);
+        testNaivePQ.add(4, 3.5868817);
+        testPQ.add(1, 2.6041056);
+        testNaivePQ.add(1, 2.6041056);
+        testPQ.add(3, 0.516);
+        testNaivePQ.add(3, 0.516);
+
+        testPQ.changePriority(0,4.4036737519);
+        testNaivePQ.add(0,4.4036737519);
+        testPQ.changePriority(2, 7.62839);
+        testNaivePQ.add(2, 7.62839);
+        testPQ.changePriority(2,8.8811505);
+        testNaivePQ.add(2,8.8811505);
+        testPQ.changePriority(1,2.4136770649);
+        testNaivePQ.add(1,2.4136770649);
+        testPQ.changePriority(1, 8.814589);
+        testNaivePQ.add(1, 8.814589);
+        testPQ.changePriority(3, 6.8848364);
+        testNaivePQ.add(3, 6.8848364);
+        testPQ.changePriority(2, 4.979542723);
+        testNaivePQ.add(2, 4.979542723);
+        testPQ.changePriority(3, 4.5923866);
+        testNaivePQ.add(3, 4.5923866);
+        testPQ.changePriority(4, 9.7865739);
+        testNaivePQ.add(4, 9.7865739);
+        testPQ.changePriority(4, 6.626749327);
+        testNaivePQ.add(4, 6.626749327);
+
     }
     @Test
     public void timeTest(){
