@@ -49,6 +49,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0) {
             swap(parentIndex(k), k);
             returnInt = swim(parentIndex(k));
+            itemIndexMap.remove(parentItem);
+            itemIndexMap.put(parentItem, k);
         }
         return returnInt;
     }
@@ -72,6 +74,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (itemValueMap.get(items.get(smaller)).compareTo(itemValueMap.get(items.get(k))) < 0) {
             swap(smaller, k);
             returnInt = sink(smaller);
+            itemIndexMap.remove(items.get(smaller));
+            itemIndexMap.put(items.get(smaller), k);
         }
         return returnInt;
     }
