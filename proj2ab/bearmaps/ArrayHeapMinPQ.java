@@ -21,7 +21,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     /* Adds an item with the given priority value. Throws an
      * IllegalArgumentException if item is already present. */
-    public void add(T item, double priority) { /** if same value, first one is "smaller" than other**/
+    /** if same value, first one is "smaller" than other**/
+    public void add(T item, double priority) {
         if (contains(item)) {
             throw new IllegalArgumentException("This item is already in the PQ.");
         }
@@ -106,13 +107,13 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             throw new NoSuchElementException("The PQ is empty");
         }
         T removed = items.get(1);
-        T lastItem = items.get(nextOpen-1);
+        T lastItem = items.get(nextOpen - 1);
         swap(1, nextOpen - 1);
         items.remove(nextOpen - 1);
         itemValueMap.remove(removed);
-        itemIndexMap.put(lastItem, sink(1));
         size--;
         nextOpen--;
+        itemIndexMap.put(lastItem, sink(1));
         return removed;
     }
 
@@ -131,13 +132,21 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         itemValueMap.put(item, priority);
         int currentItemIndex = itemIndexMap.get(item);
         int parentInd = parentIndex(currentItemIndex);
-        T parentItem = items.get(parentInd);
-        T currentItem = items.get(currentItemIndex);
-        if(itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0){
-            itemIndexMap.put(item, swim(itemIndexMap.get(item)));
+        if (this.size() == 0 || this.size() == 1) {
+            return;
+        } else if (parentInd != 0) {
+            T parentItem = items.get(parentInd);
+            T currentItem = items.get(currentItemIndex);
+            if (itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0) {
+                itemIndexMap.put(item, swim(itemIndexMap.get(item)));
+                return;
+            }
         }
-        else{
-            itemIndexMap.put(item, sink(itemIndexMap.get(item)));
-        }
+        itemIndexMap.put(item, sink(itemIndexMap.get(item)));
+    }
+
+    public double returnItemPriority(T item){
+        double val = this.itemValueMap.get(item);
+        return val;
     }
 }

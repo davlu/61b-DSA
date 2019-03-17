@@ -4,10 +4,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.lang.Math;
 
-public class ArrayHeapMinPQTest {
+public class ArrayHeapMinPQTest<T, PriorityNode> {
     @Test
     public void addRemoveGenericTest() {
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
@@ -47,10 +48,10 @@ public class ArrayHeapMinPQTest {
     @Test
     public void addRemoveTest(){
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
-        for(int i =0; i<2;i ++){
+        for(int i =0; i<1000000;i ++){
             testPQ.add(i, i);
         }
-        for(int i= 0; i<2; i++){
+        for(int i= 0; i<1000000; i++){
             assertEquals(i, testPQ.removeSmallest());
         }
     }
@@ -69,30 +70,49 @@ public class ArrayHeapMinPQTest {
         assertEquals("Ruby Crystal", testPQ.getSmallest());
     }
 
-    /**@Test
+    @Test
     public void hugeTest(){
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
         NaiveMinPQ testNaivePQ = new NaiveMinPQ();
-        for(int i = 0; i<1000000; i++){
-            int move = (int) (Math.random()*5);
-            if(move ==0){
-
-                testPQ.add();
-            }
-            else if(move == 1){
-
-            }
-            else if(move == 2){
-
-            }
-            else if(move == 3){
-
-            }
-            else if(move == 4){
-
+        ArrayList<Integer> knownValues = new ArrayList<Integer>();
+        for(int i =0 ; i<1000000; i++){  /** adding a shit ton of #s**/
+            int randomItem = (int) (Math.random()*10000);
+            double randomPriority = Math.random()*100;
+            if(!testPQ.contains(randomItem)){
+                testPQ.add(randomItem, randomPriority);
+                testNaivePQ.add(randomItem, randomPriority);
             }
         }
-    }**/
+        for(int i = 0; i<1000; i++){ /**randomly getSmallest + changePriority**/
+            int move = (int) (Math.random()*2);
+            if(move == 0){ /** get the smallest **/
+                T testPQRemoved = (T) testPQ.getSmallest();
+                PriorityNode naivePQRemoved =  (PriorityNode) testNaivePQ.getSmallest();
+                if(!testPQRemoved.equals(naivePQRemoved)){
+                    assertEquals(testPQ.returnItemPriority(testPQRemoved), testNaivePQ.getSmallestPriority(), 0.01);
+                }
+                else{
+                    assertEquals(testPQ.getSmallest(), testNaivePQ.getSmallest());
+                }
+            }
+            else if(move == 1){ /**change the priority**/
+                int randomItem = (int) (Math.random()*300);
+                double randomPriority = Math.random()*100;
+                if(testPQ.contains(randomItem)){
+                    testPQ.changePriority(randomItem, randomPriority);
+                    testNaivePQ.changePriority(randomItem, randomPriority);
+                }
+            }
+        }
+        for(int i = 0; i<1000;i++){
+            T testPQRemoved = (T) testPQ.removeSmallest();
+            PriorityNode naivePQRemoved =  (PriorityNode) testNaivePQ.getSmallest();
+            if(!testPQRemoved.equals(naivePQRemoved)){
+                assertEquals(testPQ.returnItemPriority(testPQRemoved), testNaivePQ.getSmallestPriority(), 0.01);
+            }
+            assertEquals(testPQRemoved, testNaivePQ.removeSmallest());
+        }
+    }
 
     @Test
     public void timeTest(){
