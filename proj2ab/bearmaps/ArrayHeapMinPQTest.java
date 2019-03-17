@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.lang.Math;
@@ -91,7 +92,6 @@ public class ArrayHeapMinPQTest<T, PriorityNode> {
         T smallestNaivePQ = (T) testNaivePQ.getSmallest();
         System.out.println(smallestPQ);
         System.out.println(smallestNaivePQ);
-        /**
         for(int i = 0; i<testPQ.size()-1;i++){
             Double testPQRemovedPriority = testPQ.returnItemPriority(testPQ.getSmallest());
             T testPQRemoved = (T) testPQ.removeSmallest();
@@ -100,7 +100,7 @@ public class ArrayHeapMinPQTest<T, PriorityNode> {
                 assertEquals(testPQRemovedPriority, testNaivePQ.getSmallestPriority(), 0.01);
             }
             assertEquals(testPQRemoved, testNaivePQ.removeSmallest());
-        }**/
+        }
     }
 
 

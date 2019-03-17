@@ -28,15 +28,19 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         items.add(item);
         itemValueMap.put(item, priority);
-        itemIndexMap.put(item, swim(nextOpen));
+        itemIndexMap.put(item, nextOpen);
+        swim(nextOpen);
         nextOpen++;
         size++;
     }
 
     private void swap(int index1, int index2) {
-        T temp = items.get(index1);
-        items.set(index1, items.get(index2));
-        items.set(index2, temp);
+        T item1 = items.get(index1);
+        T item2 = items.get(index2);
+        items.set(index1, item2);  //swapped items.
+        items.set(index2, item1);
+        itemIndexMap.replace(item1, index2);
+        itemIndexMap.replace(item2, index1);
     }
 
     private int swim(int k) {
@@ -48,9 +52,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         T currentItem = items.get(k);
         if (itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0) {
             swap(parentIndex(k), k);
-            returnInt = swim(parentIndex(k));
-            itemIndexMap.remove(parentItem);
-            itemIndexMap.put(parentItem, k);
+            swim(parentIndex(k));
         }
         return returnInt;
     }
@@ -73,9 +75,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         if (itemValueMap.get(items.get(smaller)).compareTo(itemValueMap.get(items.get(k))) < 0) {
             swap(smaller, k);
-            returnInt = sink(smaller);
-            itemIndexMap.remove(items.get(smaller));
-            itemIndexMap.put(items.get(smaller), k);
+            sink(smaller);
         }
         return returnInt;
     }
@@ -117,7 +117,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         itemValueMap.remove(removed);
         size--;
         nextOpen--;
-        itemIndexMap.put(lastItem, sink(1));
+        sink(1);
         return removed;
     }
 
@@ -142,11 +142,11 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             T parentItem = items.get(parentInd);
             T currentItem = items.get(currentItemIndex);
             if (itemValueMap.get(parentItem).compareTo(itemValueMap.get(currentItem)) > 0) {
-                itemIndexMap.put(item, swim(itemIndexMap.get(item)));
+                swim(itemIndexMap.get(item));
                 return;
             }
         }
-        itemIndexMap.put(item, sink(itemIndexMap.get(item)));
+        sink(itemIndexMap.get(item));
     }
 
     public double returnItemPriority(T item){
