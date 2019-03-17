@@ -21,7 +21,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     /* Adds an item with the given priority value. Throws an
      * IllegalArgumentException if item is already present. */
-    /** if same value, first one is "smaller" than other**/
+
+    /**
+     * if same value, first one is "smaller" than other
+     **/
     public void add(T item, double priority) {
         if (contains(item)) {
             throw new IllegalArgumentException("This item is already in the PQ.");
@@ -149,7 +152,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         sink(itemIndexMap.get(item));
     }
 
-    public double returnItemPriority(T item){
+    public double returnItemPriority(T item) {
         double val = this.itemValueMap.get(item);
         return val;
     }

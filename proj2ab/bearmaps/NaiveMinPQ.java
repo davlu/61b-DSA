@@ -3,9 +3,11 @@ package bearmaps;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/** A very basic implementation of the ExtrinsicMinPQ.
- *  Operations have very poor performance, but it's at least
- *  correct. @author Matt Owen @since 03-11-19 */
+/**
+ * A very basic implementation of the ExtrinsicMinPQ.
+ * Operations have very poor performance, but it's at least
+ * correct. @author Matt Owen @since 03-11-19
+ */
 public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     private ArrayList<PriorityNode> items;
@@ -28,6 +30,10 @@ public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     public T getSmallest() {
         return Collections.min(items).getItem();
+    }
+
+    public double getSmallestPriority() {
+        return Collections.min(items).getPriority();
     }
 
     /* Removes and returns the minimum item. Also known as "dequeue". */
