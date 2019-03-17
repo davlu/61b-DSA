@@ -175,7 +175,7 @@ public class ArrayHeapMinPQTest<T, PriorityNode> {
     }
 
     @Test
-    public void removeTimeTest(){
+    public void removeTimeTest() {
         ArrayHeapMinPQ testPQ = new ArrayHeapMinPQ();
         NaiveMinPQ testNaivePQ = new NaiveMinPQ();
         int million = 100000;
@@ -186,14 +186,14 @@ public class ArrayHeapMinPQTest<T, PriorityNode> {
             testNaivePQ.add(i, 3.0);
         }
         int startTime = (int) System.currentTimeMillis();
-        for(int i =0; i<million; i++){
+        for (int i = 0; i < million; i++) {
             testPQ.removeSmallest();
         }
         int difference = (int) System.currentTimeMillis() - startTime;
         System.out.println("Time taken for your heap implementation: " + difference);
 
         int startTime1 = (int) System.currentTimeMillis();
-        for(int i =0; i<million; i++){
+        for (int i = 0; i < million; i++) {
             testNaivePQ.removeSmallest();
         }
         int difference1 = (int) System.currentTimeMillis() - startTime1;
