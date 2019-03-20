@@ -16,7 +16,7 @@ public class KDTree {
     }
     private static class Node{
         private Point p;
-        private static boolean orientation; //false is horizontal x, true is vertical y
+        private boolean orientation = true; //false is vertical y, true is horizontal x
         Node greater;
         Node lesser;
         public Node(Point point, Node greater, Node lesser){
@@ -25,9 +25,13 @@ public class KDTree {
             this.lesser = lesser;
         }
         public void add(Node n){
-            if(orientation == false){
-                if(this.p.getX() > n.p.getX()){
+            if(orientation == true){
+                if((this.p.getX() == n.p.getX()) && (this.p.getY() == n.p.getY())){
+                    return;
+                }
+                else if(this.p.getX() > n.p.getX()){
                     if(this.lesser != null){
+                        n.orientation = !n.orientation;
                         this.lesser.add(n);
                     }
                     else{
@@ -36,6 +40,7 @@ public class KDTree {
                 }
                 else{
                     if(this.greater != null){
+                        n.orientation = !n.orientation;
                         this.greater.add(n);
                     }
                     else{
@@ -44,8 +49,12 @@ public class KDTree {
                 }
             }
             else{
-                if(this.p.getY() > n.p.getY()){
+                if((this.p.getX() == n.p.getX()) && (this.p.getY() == n.p.getY())){
+                    return;
+                }
+                else if(this.p.getY() > n.p.getY()){
                     if(this.lesser != null){
+                        n.orientation = !n.orientation;
                         this.lesser.add(n);
                     }
                     else{
@@ -54,6 +63,7 @@ public class KDTree {
                 }
                 else{
                     if(this.greater != null){
+                        n.orientation = !n.orientation;
                         this.greater.add(n);
                     }
                     else{
