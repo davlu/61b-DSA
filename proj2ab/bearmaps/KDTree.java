@@ -73,7 +73,34 @@ public class KDTree {
             }
         }
     }
-    /**
     public Point nearest(double x, double y){
-    }**/
+        Point pointOfInterest = new Point(x,y);
+        return helperFunction(pointOfInterest, this.root, 100000.0);
+    }
+
+    private Point helperFunction(Point pointOfInterest, Node root, Double shortestDist){
+        if(root.lesser == null && root.greater == null){
+            return root.p;
+        }
+        Double shorter = shortestDist;
+        if(Point.distance(root.p, pointOfInterest) < shortestDist){
+            shorter = Point.distance(root.p, pointOfInterest);
+        }
+        if(root.lesser.p!=null && distX(pointOfInterest, root.lesser.p) < distX(pointOfInterest, root.greater.p)){
+            return helperFunction(pointOfInterest, root.lesser, shorter);
+        }
+    }
+    private double bestPossibleDistance(Point pointOfInterest, Node otherPoint){ //looks on the infinite line for best
+        if(otherPoint.orientation == false){
+            return Math.abs(pointOfInterest.getX()-otherPoint.p.getX());
+        }
+        return Math.abs(pointOfInterest.getY()-otherPoint.p.getY());
+    }
+
+    private double distX(Point pointOfInterest, Point otherPoint){
+        return Math.abs(pointOfInterest.getX() - otherPoint.getX());
+    }
+    private double distY(Point pointOfInterest, Point otherPoint){
+        return Math.abs(pointOfInterest.getY() - otherPoint.getY());
+    }
 }
