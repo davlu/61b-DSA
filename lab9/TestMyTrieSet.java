@@ -53,7 +53,24 @@ public class TestMyTrieSet {
             assertFalse(keys.contains(s));
         }
     }
+    @Test
+    public void basicTest() {
+        MyTrieSet t = new MyTrieSet();
+        t.add("sam");
+        t.add("same");
+        t.add("apple");
+        t.add("samson");
+        t.add("samblahblhablah");
+        t.add("apples");
+        t.add("bear");
 
+        List<String> key = t.keysWithPrefix("sa");
+        assertEquals(key.size(), 4);
+        assertTrue(key.contains("samson"));
+        assertTrue(key.contains("sam"));
+        assertTrue(key.contains("samblahblhablah"));
+        assertTrue(key.contains("same"));
+    }
     public static void main(String[] args) {
         jh61b.junit.TestRunner.runTests(TestMyTrieSet.class);
     }
