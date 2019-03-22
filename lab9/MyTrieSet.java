@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 public class MyTrieSet implements TrieSet61B {
-    Node root;
+    private Node root;
     public MyTrieSet(){
         this.root = new Node();
     }
@@ -28,7 +28,7 @@ public class MyTrieSet implements TrieSet61B {
     /** Returns true if the Trie contains KEY, false otherwise */
     public boolean contains(String key){
         Node curr = this.root;
-        for(int i =0; i<key.length()-1;i++){
+        for(int i =0; i<key.length();i++){
             char c = key.charAt(i);
             if(!curr.links.containsKey(c)){
                 return false;
@@ -44,7 +44,7 @@ public class MyTrieSet implements TrieSet61B {
             return;
         }
         Node curr = this.root;
-        for(int i = 0; i < key.length()-1; i++){
+        for(int i = 0; i < key.length(); i++){
             char c = key.charAt(i);
             if(!curr.links.containsKey(c)){
                 curr.links.put(c, new Node(c, false));
@@ -65,27 +65,26 @@ public class MyTrieSet implements TrieSet61B {
             }
             curr = curr.links.get(c);
         }
-        for(String s: helperStringFinder(curr)){
-            allWords.add(prefix+s);
+        for(String s: helperStringFinder(prefix, curr)){
+            allWords.add(s);
         }
         return allWords;
     }
 
-    private List<String> helperStringFinder(Node n){
+    private List<String> helperStringFinder(String prefix , Node n){
         List<String> allWords = new ArrayList<>();
         if(n==null){
             return null;
         }
-        String start = Character.toString(n.character);
         for(char c: n.links.keySet()){
             Node next = n.links.get(c);
-            String newWord = start + next.character;
-            if(n.isEnd){
+            String newWord = prefix + next.character;
+            if(next.isEnd){
                 allWords.add(newWord);
             }
-            List<String> potential = helperStringFinder(next);
-            if(potential!= null){
-                allWords = potential;
+            List<String> potential = helperStringFinder(newWord, next);
+            for(String s: potential){
+                allWords.add(s);
             }
         }
         return allWords;
@@ -97,13 +96,5 @@ public class MyTrieSet implements TrieSet61B {
      */
     public String longestPrefixOf(String key){
         throw new UnsupportedOperationException();
-    }
-
-    public static void main(String[] args) {
-        MyTrieSet t = new MyTrieSet();
-        t.add("hello");
-        t.add("hi");
-        t.add("help");
-        t.add("zebra");
     }
 }
