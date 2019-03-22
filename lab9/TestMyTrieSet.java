@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
+
 import org.junit.Test;
+
 import java.util.List;
 
 /**
@@ -38,24 +40,26 @@ public class TestMyTrieSet {
         String[] otherStrings = new String[]{"a", "awls", "hello"};
 
         MyTrieSet t = new MyTrieSet();
-        for (String s: saStrings) {
+        for (String s : saStrings) {
             t.add(s);
         }
-        for (String s: otherStrings) {
+        for (String s : otherStrings) {
             t.add(s);
         }
 
         List<String> keys = t.keysWithPrefix("sa");
-        for (String s: saStrings) {
+        for (String s : saStrings) {
             assertTrue(keys.contains(s));
         }
-        for (String s: otherStrings) {
+        for (String s : otherStrings) {
             assertFalse(keys.contains(s));
         }
     }
+
     @Test
     public void basicTest() {
         MyTrieSet t = new MyTrieSet();
+        t.add("sam");
         t.add("sam");
         t.add("same");
         t.add("apple");
@@ -71,10 +75,10 @@ public class TestMyTrieSet {
         assertTrue(key.contains("samblahblhablah"));
         assertTrue(key.contains("same"));
     }
+
     public static void main(String[] args) {
         jh61b.junit.TestRunner.runTests(TestMyTrieSet.class);
     }
-
 
 
 }
