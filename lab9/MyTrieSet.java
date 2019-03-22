@@ -35,7 +35,7 @@ public class MyTrieSet implements TrieSet61B {
             }
             curr = curr.links.get(c);
         }
-        return true;
+        return curr.isEnd == true;
     }
 
     /** Inserts string KEY into Trie */
