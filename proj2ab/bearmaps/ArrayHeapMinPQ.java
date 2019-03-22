@@ -114,6 +114,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             throw new NoSuchElementException("The PQ is empty");
         }
         T removed = items.get(1);
+        T lastItem = items.get(nextOpen - 1);
         swap(1, nextOpen - 1);
         items.remove(nextOpen - 1);
         itemValueMap.remove(removed);

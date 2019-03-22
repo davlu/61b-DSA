@@ -13,13 +13,12 @@ public class KDTree {
         for (int i = 1; i < listPoints.size(); i++) {
             Node newNode = new Node(listPoints.get(i), null, null);
             this.root.add(newNode);
-            newNode.orientation = !(newNode.orientation);
         }
     }
 
     private static class Node implements Comparable<Point> {
         private Point p;
-        private boolean orientation = true; //false is vertical y, true is horizontal x
+        private boolean orientation = true; //false splits horizontally true splits vertically
         Node greater;
         Node lesser;
 
@@ -30,32 +29,38 @@ public class KDTree {
         }
 
         public int compareTo(Point p1) {
+            //if our node is vertically split(true), check for left/right X
             if (this.orientation) {
-                return (int) (this.p.getX() - p1.getX());
+                return Double.compare(this.p.getX(), p1.getX());
+                //compare our point TO p1-  X
             }
-            return (int) (this.p.getY() - p1.getY());
+            return Double.compare(this.p.getY(), p1.getY());
+            //compare our point TO p1- Y
         }
 
         public void add(Node n) {
+            //if we are deciding among the vertical split(left right - X)
             if (orientation) {
                 if ((this.p.getX() == n.p.getX()) && (this.p.getY() == n.p.getY())) {
                     return;
                 } else if (this.p.getX() > n.p.getX()) {
-                    if (this.lesser != null) {
+                    if (this.lesser != null) { //if there is already an existing node
                         n.orientation = !n.orientation;
                         this.lesser.add(n);
                     } else {
+                        n.orientation = !n.orientation;
                         this.lesser = n;
                     }
-                } else {
+                } else { //current node has smaller X than node that we are adding
                     if (this.greater != null) {
-                        n.orientation = !n.orientation;
-                        this.greater.add(n);
+                        n.orientation = !n.orientation;  //recursively add onto
+                        this.greater.add(n);             //the 'greater' node
                     } else {
+                        n.orientation = !n.orientation;
                         this.greater = n;
                     }
                 }
-            } else {
+            } else {  //we are deciding among the horizontal split(up down - Y)
                 if ((this.p.getX() == n.p.getX()) && (this.p.getY() == n.p.getY())) {
                     return;
                 } else if (this.p.getY() > n.p.getY()) {
@@ -63,13 +68,15 @@ public class KDTree {
                         n.orientation = !n.orientation;
                         this.lesser.add(n);
                     } else {
+                        n.orientation = !n.orientation;
                         this.lesser = n;
                     }
-                } else {
+                } else {   //if our Y is less than added node's Y
                     if (this.greater != null) {
                         n.orientation = !n.orientation;
                         this.greater.add(n);
                     } else {
+                        n.orientation = !n.orientation;
                         this.greater = n;
                     }
                 }
@@ -78,42 +85,43 @@ public class KDTree {
     }
 
     public Point nearest(double x, double y) {
-        Point pointOfInterest = new Point(x, y);
+        Point pointOfInterest = new Point(x, y); //make point of interest
         return helperFunction(pointOfInterest, this.root, this.root).p;
     }
 
     private Node helperFunction(Point pointOfInterest, Node currentNode, Node bestNode) {
-        if (currentNode == null) {
+        if (currentNode == null) { //currentNode is node we are inspecting.
             return bestNode;
         }
+        Node goodSide = null;
+        Node badSide = null;
         Double newDistance = Point.distance(pointOfInterest, currentNode.p);
         Double shortestD = Point.distance(pointOfInterest, bestNode.p);
         if (newDistance < shortestD) {
             bestNode = currentNode;
         }
         if (currentNode.compareTo(pointOfInterest) < 0) {
-            Node best = helperFunction(pointOfInterest, currentNode.greater, bestNode);
-            if (currentNode.lesser != null
-                    && bestPossibleDistance(pointOfInterest, currentNode.lesser)
-                    < Point.distance(best.p, pointOfInterest)) {
-                best = helperFunction(pointOfInterest, currentNode.lesser, best);
-            }
-            return best;
-        } else {
-            Node best = helperFunction(pointOfInterest, currentNode.lesser, bestNode);
-            if (currentNode.greater != null
-                    && bestPossibleDistance(pointOfInterest, currentNode.greater)
-                    < Point.distance(best.p, pointOfInterest)) {
-                best = helperFunction(pointOfInterest, currentNode.greater, best);
-            }
-            return best;
+            //if our inspected node is LESS than POI
+            goodSide = currentNode.greater;
+            badSide = currentNode.lesser;
+        } else { //if our inspected node is GREATER than POI
+            badSide = currentNode.greater;
+            goodSide = currentNode.lesser;
         }
+        bestNode = helperFunction(pointOfInterest, goodSide, bestNode);
+        if (bestPossibleDistance(pointOfInterest, currentNode)
+                < Point.distance(pointOfInterest, bestNode.p)) {
+            bestNode = helperFunction(pointOfInterest, badSide, bestNode);
+        }
+        return bestNode;
     }
 
     private double bestPossibleDistance(Point pointOfInterest, Node otherPoint) {
-        if (!otherPoint.orientation) {
-            return Math.pow(Math.abs(pointOfInterest.getX() - otherPoint.p.getX()), 2);
+        if (otherPoint.orientation) {
+            //if other point orientation splits horizontally(looking at delta Y
+            return Math.pow(pointOfInterest.getX() - otherPoint.p.getX(), 2);
         }
-        return Math.pow(Math.abs(pointOfInterest.getY() - otherPoint.p.getY()), 2);
+        return Math.pow(pointOfInterest.getY() - otherPoint.p.getY(), 2);
+        //if other point splits vertically
     }
 }

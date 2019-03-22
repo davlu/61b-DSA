@@ -2,23 +2,12 @@ package bearmaps;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.NoSuchElementException;
 
-<<<<<<< HEAD
 /**
  * A very basic implementation of the ExtrinsicMinPQ.
  * Operations have very poor performance, but it's at least
  * correct. @author Matt Owen @since 03-11-19
  */
-=======
-/** A very basic implementation of the ExtrinsicMinPQ.
- *  Operations have very poor performance, but it's at least
- *  correct, with one exception: The add method
- *  should throw an exception if the item already exists,
- *  but doing so makes the add method painfully slow to the
- *  point where this class is very difficult to use for testing.
- *  @author Matt Owen @since 03-11-19 */
->>>>>>> 6e94997378eedb3be2a1570b2736651f808d5bed
 public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     private ArrayList<PriorityNode> items;
@@ -27,9 +16,6 @@ public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
         items = new ArrayList<>();
     }
 
-    /** Note this method does not throw the proper exception,
-     *  otherwise it is painfully slow (linear time).
-     */
     @Override
     public void add(T item, double priority) {
         items.add(new PriorityNode(item, priority));
@@ -40,36 +26,26 @@ public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
         return items.contains(new PriorityNode(item, 0));
     }
 
+    /* Returns the minimum item. Also known as "min". */
     @Override
     public T getSmallest() {
-        if (size() == 0) {
-            throw new NoSuchElementException("PQ is empty");
-        }
         return Collections.min(items).getItem();
     }
 
-<<<<<<< HEAD
     public double getSmallestPriority() {
         return Collections.min(items).getPriority();
     }
 
     /* Removes and returns the minimum item. Also known as "dequeue". */
-=======
->>>>>>> 6e94997378eedb3be2a1570b2736651f808d5bed
     @Override
     public T removeSmallest() {
-        if (size() == 0) {
-            throw new NoSuchElementException("PQ is empty");
-        }
         int minInd = indOf(getSmallest());
         return items.remove(minInd).getItem();
     }
 
+    /* Changes the priority of the given item. Behavior undefined if item doesn't exist. */
     @Override
     public void changePriority(T item, double priority) {
-        if (contains(item) == false) {
-            throw new NoSuchElementException("PQ does not contain " + item);
-        }
         items.get(indOf(item)).setPriority(priority);
     }
 
