@@ -40,7 +40,7 @@ public class MyTrieSet implements TrieSet61B {
 
     /** Inserts string KEY into Trie */
     public void add(String key){
-        if(key == null || key.length() == 0){
+        if(key == null || key.length() == 0 || contains(key)){
             return;
         }
         Node curr = this.root;
