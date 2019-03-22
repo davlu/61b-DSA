@@ -17,7 +17,7 @@ public class TimingTestDemo {
             }
         }
         long end = System.currentTimeMillis();
-        System.out.println("Total time elapsed: " + (end - start)/1000.0 +  " seconds.");
+        System.out.println("Total time elapsed: " + (end - start) / 1000.0 + " seconds.");
 
         Stopwatch sw = new Stopwatch();
         for (int i = 0; i < 100000; i += 1) {
@@ -25,6 +25,6 @@ public class TimingTestDemo {
                 sum = sum + i + j;
             }
         }
-        System.out.println("Total time elapsed: " + sw.elapsedTime() +  " seconds.");
+        System.out.println("Total time elapsed: " + sw.elapsedTime() + " seconds.");
     }
 }
