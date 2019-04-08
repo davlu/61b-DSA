@@ -85,31 +85,30 @@ public class KDTreeTest {
         }
     }
 
-    //@Test
+    @Test
     public void timeTest() {
         List<Point> pointList = new ArrayList<>();
         List<Point> findPoints = new ArrayList<>();
-        int rounds = 100000;
+        int rounds = 1000000;
         for (int i = 0; i < rounds; i++) {                  //generate test values
             double randPointX = Math.random() * 1000;
             double randPointY = Math.random() * 1000;
             pointList.add(new Point(randPointX, randPointY));
         }
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             double randPointX = Math.random() * 1000;
             double randPointY = Math.random() * 1000;
             findPoints.add(new Point(randPointX, randPointY));
         }
         NaivePointSet naive = new NaivePointSet(pointList);
         KDTree kdTree = new KDTree(pointList);
-
+        /**
         int startTime = (int) System.currentTimeMillis();
         for (int i = 0; i < findPoints.size(); i++) {
             naive.nearest(findPoints.get(i).getX(), findPoints.get(i).getY());
         }
         int difference = (int) System.currentTimeMillis() - startTime;
-        System.out.println("Time taken for naive heap implementation: " + difference);
-
+        System.out.println("Time taken for naive heap implementation: " + difference);**/
         int startTime1 = (int) System.currentTimeMillis();
         for (int i = 0; i < findPoints.size(); i++) {
             kdTree.nearest(findPoints.get(i).getX(), findPoints.get(i).getY());
