@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private int result;
     private int numDequeues;
-    private int timeSeconds;
+    private double timeSeconds;
     private ArrayHeapMinPQ<Vertex> fringe;
     private HashMap<Vertex, Double> distTo;
     private List<Vertex> solution;
@@ -20,30 +20,51 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
      * return their results in constant time. Note that timeout passed in is in seconds
      */
     public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) {
-        int startTime = (int) System.currentTimeMillis();
-        timeSeconds = ((int) System.currentTimeMillis() - startTime) / 1000;
+        double startTime = System.currentTimeMillis();
         fringe = new ArrayHeapMinPQ();  //create fringe PQ with start = 0 dist
         distTo = new HashMap<>();
         solution = new ArrayList<Vertex>();
-        fringe.add(start, 0.0);
-        while (fringe.size() != 0 && fringe.getSmallest() != end && result != 1) {
+        fringe.add(start, input.estimatedDistanceToGoal(start, end));
+        distTo.put(start, 0.0);
+        while (fringe.size() != 0 && result != 1) {
+            timeSeconds = (double) ((System.currentTimeMillis() - startTime) / 1000);
+            if(!(timeSeconds<timeout)){
+                result = 1;
+                break;
+            }
+            if(fringe.getSmallest() == end){
+                Vertex currentVertex = fringe.removeSmallest();
+                solution.add(currentVertex);
+                solutionSize+=edgeLengthCurrent(currentVertex);
+                break;
+            }
             Vertex currentVertex = fringe.removeSmallest();
+            solution.add(currentVertex);
+            solutionSize += edgeLengthCurrent(currentVertex);
             numDequeues += 1;
             for (WeightedEdge<Vertex> edge : input.neighbors(currentVertex)) {
-                if (timeSeconds < timeout) {
-                    relax(input, edge, currentVertex, end);
-                    timeSeconds = ((int) System.currentTimeMillis() - startTime) / 1000;
-                } else {
-                    result = 1;
-                    break;
-                }
+                relax(input, edge, currentVertex, end);
             }
+
         }
         if (fringe.size() == 0) {
             result = 2;
         } else {
             result = 0;
         }
+    }
+
+    private double edgeLengthCurrent(Vertex currentVertex){
+        int i = 0;
+        int j = 1;
+        while(j<solution.size()){
+            if(solution.get(j) == currentVertex){
+                return distTo.get(solution.get(j))-distTo.get(solution.get(i));
+            }
+            i++;
+            j++;
+        }
+        return distTo.get(solution.get(i));
     }
 
     private void relax(AStarGraph<Vertex> input,
@@ -54,19 +75,17 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         double edgeWeight = edge.weight();
         double heuristic = input.estimatedDistanceToGoal(next, end);
         double currentPlusEdge = distTo.get(current) + edgeWeight;
-        if (!distTo.containsKey(next)) { //if distTo doesn't contain nextVertex..
-            //add distance from source + weight
-            distTo.put(next, edge.weight() + distTo.get(currentVertex));
+        if(!fringe.contains(next)){
+            fringe.add(next, Integer.MAX_VALUE);
+            distTo.put(next, Double.MAX_VALUE);
         }
         if (currentPlusEdge < distTo.get(next)) {
             distTo.put(next, currentPlusEdge);
-            if (distTo.containsKey(next)) {
+            if (fringe.contains(next)) {
                 fringe.changePriority(next, distTo.get(next) + heuristic);
             } else {
                 fringe.add(next, distTo.get(next) + heuristic);
             }
-            solution.add(next);
-            solutionSize += edgeWeight;
         }
     }
 
