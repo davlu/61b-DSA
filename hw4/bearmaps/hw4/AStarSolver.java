@@ -37,7 +37,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                 result = 1;
                 break;
             }
-            if (fringe.getSmallest() == end) {
+            if (fringe.getSmallest().equals(end)) {
                 break;
             }
             Vertex currentVertex = fringe.removeSmallest();
