@@ -47,20 +47,19 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
             }
 
         }
-        Vertex v = end;
-        while (!v.equals(start)) {
-            solution.add(0, v);
-            v = edgeTo.get(v).from();
-        }
-        solution.add(0, start);
-        solutionSize = distTo.get(end);
-        timeSeconds = ((System.currentTimeMillis() - startTime) / 1000);
-        if (timeSeconds > timeout) {
-            result = 1;
-        }
         if (fringe.size() == 0) {
             result = 2;
+        } else if (timeSeconds > timeout) {
+            result = 1;
         } else {
+            Vertex v = end;
+            while (!v.equals(start)) {
+                solution.add(0, v);
+                v = edgeTo.get(v).from();
+            }
+            solution.add(0, start);
+            solutionSize = distTo.get(end);
+            timeSeconds = ((System.currentTimeMillis() - startTime) / 1000);
             result = 0;
         }
     }
