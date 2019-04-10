@@ -3,10 +3,11 @@ package bearmaps.hw4;
 import bearmaps.proj2ab.DoubleMapPQ;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 
 public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
+
     private int result;
     private int numDequeues;
     private double timeSeconds;
@@ -24,7 +25,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         double startTime = System.currentTimeMillis();
         fringe = new DoubleMapPQ<>();
         distTo = new HashMap<>();
-        solution = new ArrayList<>();
+        solution = new LinkedList<>();
         edgeTo = new HashMap<>();
 
         fringe.add(start, input.estimatedDistanceToGoal(start, end));
@@ -32,40 +33,36 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         while (fringe.size() != 0 && result != 1) {
             timeSeconds = ((System.currentTimeMillis() - startTime) / 1000);
-            if (!(timeSeconds < timeout)) {
+            if (!(timeSeconds < 9999999)) {
                 result = 1;
                 break;
             }
             if (fringe.getSmallest() == end) {
-                Vertex currentVertex = fringe.removeSmallest();
-                solution.add(currentVertex);
-                solutionSize = totalSolutionEdgeLength(start);
                 break;
             }
             Vertex currentVertex = fringe.removeSmallest();
-            solution.add(currentVertex);
             numDequeues += 1;
             for (WeightedEdge<Vertex> edge : input.neighbors(currentVertex)) {
                 relax(input, edge, end);
             }
 
         }
+        Vertex v = end;
+        while (!v.equals(start)) {
+            solution.add(0, v);
+            v = edgeTo.get(v).from();
+        }
+        solution.add(0, start);
+        solutionSize = distTo.get(end);
+        timeSeconds = ((System.currentTimeMillis() - startTime) / 1000);
+        if (timeSeconds > timeout) {
+            result = 1;
+        }
         if (fringe.size() == 0) {
             result = 2;
         } else {
             result = 0;
         }
-    }
-
-    private double totalSolutionEdgeLength(Vertex start) {
-        double weight = 0.0;
-        for (Vertex v : solution) {
-            if (v.equals(start)) {
-                continue;
-            }
-            weight += edgeTo.get(v).weight();
-        }
-        return weight;
     }
 
     private void relax(AStarGraph<Vertex> input, WeightedEdge<Vertex> edge, Vertex end) {
@@ -103,7 +100,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
      */
     public List<Vertex> solution() {
         if (result == 1 || result == 2) {
-            solution = new ArrayList<>();
+            solution = new LinkedList<>();
         }
         return solution;
     }
