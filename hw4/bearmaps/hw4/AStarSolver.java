@@ -1,22 +1,20 @@
 package bearmaps.hw4;
 
-import bearmaps.proj2ab.ArrayHeapMinPQ;
 import bearmaps.proj2ab.DoubleMapPQ;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private int result;
     private int numDequeues;
     private double timeSeconds;
+    private double solutionSize;
     private DoubleMapPQ<Vertex> fringe;
     private HashMap<Vertex, Double> distTo;
     private List<Vertex> solution;
-    private double solutionSize;
-    private HashSet<Vertex> visited;
+    private HashMap<Vertex, WeightedEdge<Vertex>> edgeTo;
 
     /**
      * Constructor which finds the solution, computing everything necessary for all other methods to
@@ -27,32 +25,28 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         fringe = new DoubleMapPQ<>();
         distTo = new HashMap<>();
         solution = new ArrayList<>();
-        visited = new HashSet<>();
+        edgeTo = new HashMap<>();
 
         fringe.add(start, input.estimatedDistanceToGoal(start, end));
         distTo.put(start, 0.0);
 
         while (fringe.size() != 0 && result != 1) {
             timeSeconds = ((System.currentTimeMillis() - startTime) / 1000);
-            if (!(timeSeconds < 999999999)) {
+            if (!(timeSeconds < timeout)) {
                 result = 1;
                 break;
             }
             if (fringe.getSmallest() == end) {
                 Vertex currentVertex = fringe.removeSmallest();
                 solution.add(currentVertex);
-                solutionSize += edgeLengthCurrent(currentVertex);
+                solutionSize = totalSolutionEdgeLength(start);
                 break;
             }
             Vertex currentVertex = fringe.removeSmallest();
             solution.add(currentVertex);
-            visited.add(currentVertex);
-            solutionSize += edgeLengthCurrent(currentVertex);
             numDequeues += 1;
             for (WeightedEdge<Vertex> edge : input.neighbors(currentVertex)) {
-                if(!(visited.contains(edge.to()))){
-                    relax(input, edge, currentVertex, end);
-                }
+                relax(input, edge, end);
             }
 
         }
@@ -63,37 +57,30 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         }
     }
 
-    private double edgeLengthCurrent(Vertex currentVertex) {
-        int i = 0;
-        int j = 1;
-        while (j < solution.size()) {
-            if (solution.get(j) == currentVertex) {
-                return distTo.get(solution.get(j)) - distTo.get(solution.get(i));
+    private double totalSolutionEdgeLength(Vertex start) {
+        double weight = 0.0;
+        for (Vertex v : solution) {
+            if (v.equals(start)) {
+                continue;
             }
-            i++;
-            j++;
+            weight += edgeTo.get(v).weight();
         }
-        return distTo.get(solution.get(i));
+        return weight;
     }
 
-    private void relax(AStarGraph<Vertex> input,
-                       WeightedEdge<Vertex> edge,
-                       Vertex currentVertex, Vertex end) {
-        Vertex next = edge.to(); //destination vertex from source vertex
-        Vertex current = edge.from();
-        double edgeWeight = edge.weight();
-        double heuristic = input.estimatedDistanceToGoal(next, end);
-        double currentPlusEdge = distTo.get(current) + edgeWeight;
-        if (!fringe.contains(next)) {
-            fringe.add(next, Integer.MAX_VALUE);
-            distTo.put(next, Double.MAX_VALUE);
-        }
-        if (currentPlusEdge < distTo.get(next)) {
-            distTo.put(next, currentPlusEdge);
-            if (fringe.contains(next)) {
-                fringe.changePriority(next, distTo.get(next) + heuristic);
+    private void relax(AStarGraph<Vertex> input, WeightedEdge<Vertex> edge, Vertex end) {
+        Vertex q = edge.to(); //destination vertex from source vertex
+        Vertex p = edge.from();
+        double w = edge.weight();
+        double heuristic = input.estimatedDistanceToGoal(q, end);
+        double newDist = distTo.get(p) + w;
+        if (!distTo.containsKey(q) || newDist < distTo.get(q)) {
+            distTo.put(q, newDist);
+            edgeTo.put(q, edge);
+            if (fringe.contains(q)) {
+                fringe.changePriority(q, newDist + heuristic);
             } else {
-                fringe.add(next, distTo.get(next) + heuristic);
+                fringe.add(q, newDist + heuristic);
             }
         }
     }
