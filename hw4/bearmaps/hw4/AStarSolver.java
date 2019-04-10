@@ -49,8 +49,6 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         }
         if (fringe.size() == 0) {
             result = 2;
-        } else if (timeSeconds > timeout) {
-            result = 1;
         } else {
             Vertex v = end;
             while (!v.equals(start)) {
@@ -60,7 +58,11 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
             solution.add(0, start);
             solutionSize = distTo.get(end);
             timeSeconds = ((System.currentTimeMillis() - startTime) / 1000);
-            result = 0;
+            if (timeSeconds > timeout) {
+                result = 1;
+            } else {
+                result = 0;
+            }
         }
     }
 
