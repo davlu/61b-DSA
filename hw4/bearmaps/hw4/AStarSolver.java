@@ -33,7 +33,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         while (fringe.size() != 0 && result != 1) {
             timeSeconds = ((System.currentTimeMillis() - startTime) / 1000);
-            if (!(timeSeconds < 9999999)) {
+            if (!(timeSeconds < timeout)) {
                 result = 1;
                 break;
             }
