@@ -4,27 +4,27 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A:  
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: Used modular arithmetic in an efficient way.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: ArrayDeque implementation had too many loops. Maybe could have used recursion.
 
 Q: What did you learn by talking to your partner about writing ArrayDeque?
 
-A:
+A: Could have refactored the code into smaller bits.
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: Modular arithmetic.
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: I would use modular arithmetic more instead of just for a few of the methods.
 
 -----
 
@@ -32,27 +32,29 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: Using private static final. 
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: I am proud of the fact that I tried to implement LLD without using an
+if statement and instead relied solely on pointer manipulation.
+
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: How i used too many for loops.
 
 Q: What did you learn by talking to your partner about writing LinkedListDeque?
 
-A:
+A: It is often good to refactor code.	
 
 Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
-A:
+A: The idea of how emptyDeque worked.
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: I would probably do the same thing again. Satisfied with my implementation.
 
 -----
 
@@ -60,4 +62,4 @@ Meta:
 
 Q: Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: We need more of these in the future. 

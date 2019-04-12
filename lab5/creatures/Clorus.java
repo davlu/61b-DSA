@@ -68,7 +68,7 @@ public class Clorus extends Creature{
             return new Action(Action.ActionType.ATTACK, d);
         }
 
-        else if(this.energy()>1.0){
+        else if(this.energy()>=1.5){
             Direction d = HugLifeUtils.randomEntry(emptyNeighbors);
             return new Action(Action.ActionType.REPLICATE, d);
         }

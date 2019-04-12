@@ -297,7 +297,7 @@ public class ArrayDequeTest {
 
     public static void resizeSmallTest(){
         ArrayDeque<Integer> ad01 = new ArrayDeque<Integer>();
-        ad01.resizeBig(1000);
+        //ad01.resizeBig(1000);
         ad01.addFirst(1);
         ad01.removeFirst();
     }

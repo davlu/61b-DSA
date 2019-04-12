@@ -7,7 +7,7 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
     private ArrayList<Node>[] table;
     private HashSet<K> keys;
     public MyHashMap(){
-        table = (ArrayList<Node>[]) new ArrayList[initialSize];
+        table =  new ArrayList[initialSize];
         keys = new HashSet<>();
     }
     public MyHashMap(int initialSize){
@@ -21,9 +21,9 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
         return Math.floorMod(item.hashCode(), size);
     }
     public void clear(){           //
-        this.table = (ArrayList<Node>[]) new ArrayList[initialSize];
+        this.table = new ArrayList[initialSize];
         this.size = 0;
-        this.keys = new HashSet<K>();
+        this.keys = new HashSet<>();
     }
     private class Node{            //
         K key;
@@ -82,7 +82,7 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
             rehash(initialSize*2);
         }
         if(table[hashIndex(key, this.initialSize)] == null){
-            table[hashIndex(key, this.initialSize)] = new ArrayList<Node>();
+            table[hashIndex(key, this.initialSize)] = new ArrayList<>();
         }
         if(containsKey(key)){
             ArrayList<Node> bucket = table[hashIndex(key, this.initialSize)];
@@ -102,18 +102,16 @@ public class MyHashMap<K,V> implements Map61B<K,V> {
     }
 
     private void rehash(int targetSize){
-        ArrayList<Node>[] newMap = (ArrayList<Node>[]) new ArrayList[targetSize];
+        ArrayList<Node>[] newMap = new ArrayList[targetSize];
         for(K key : this.keys){
             int index = hashIndex(key, targetSize);
             ArrayList<Node> bucket = newMap[index];
             if(bucket== null){
-                bucket = new ArrayList<Node>();
+                bucket = new ArrayList<>();
                 newMap[index] = bucket;
             }
             Node newEntry = getEntry(key);
             bucket.add(newEntry);
-            V entry = get(key);
-            Node newEntryW = new Node(key, entry);
         }
         this.table = newMap;
     }
