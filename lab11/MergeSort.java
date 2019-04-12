@@ -64,7 +64,7 @@ public class MergeSort {
     private static <Item extends Comparable>
     Queue<Item> mergeSortedQueues(Queue<Item> q1, Queue<Item> q2) {
         Queue<Item> auxiliary = new Queue<>();
-        for (int i = 0; i < q1.size() + q2.size(); i++) {
+        for (int i = 0; i < q1.size() + q2.size()+1; i++) {
             auxiliary.enqueue(getMin(q1, q2));
         }
         return auxiliary;
