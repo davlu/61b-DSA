@@ -3,15 +3,24 @@ import edu.princeton.cs.algs4.Queue;
 import org.junit.Test;
 
 public class TestSortAlgs {
+    Queue<String> tas = new Queue<>();
 
     @Test
     public void testQuickSort() {
-
+        tas.enqueue("Joe");
+        tas.enqueue("Omar");
+        tas.enqueue("Itai");
+        tas = QuickSort.quickSort(tas);
+        assert isSorted(tas);
     }
 
     @Test
     public void testMergeSort() {
-
+        tas.enqueue("Joe");
+        tas.enqueue("Omar");
+        tas.enqueue("Itai");
+        tas = MergeSort.mergeSort(tas);
+        assert isSorted(tas);
     }
 
     /**
