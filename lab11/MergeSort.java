@@ -64,7 +64,8 @@ public class MergeSort {
     private static <Item extends Comparable>
     Queue<Item> mergeSortedQueues(Queue<Item> q1, Queue<Item> q2) {
         Queue<Item> auxiliary = new Queue<>();
-        for (int i = 0; i < q1.size() + q2.size()+1; i++) {
+        int iters = q1.size() + q2.size();
+        for (int i = 0; i < iters; i++) {
             auxiliary.enqueue(getMin(q1, q2));
         }
         return auxiliary;
@@ -82,8 +83,7 @@ public class MergeSort {
     public static <Item extends Comparable> Queue<Item> mergeSort(Queue<Item> items) {
         if (items.size() == 1 || items.size() == 0) {
             return items;
-        }
-        if (items.size() == 2) {
+        } else if (items.size() == 2) {
             Queue<Queue<Item>> queueOfQueues = makeSingleItemQueues(items);
             return mergeSortedQueues(queueOfQueues.dequeue(), queueOfQueues.dequeue());
         }
@@ -102,5 +102,15 @@ public class MergeSort {
         left = mergeSort(left);
         right = mergeSort(right);
         return mergeSortedQueues(left, right);
+    }
+
+    public static void main(String[] args) {
+        Queue<Integer> test = new Queue<>();
+        for (int i = 0; i < 20; i++) {
+            test.enqueue((int) (Math.random() * 50 + 1));
+        }
+        System.out.println(test.toString());
+        Queue<Integer> merged = mergeSort(test);
+        System.out.println(merged.toString());
     }
 }
