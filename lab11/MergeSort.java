@@ -39,7 +39,7 @@ public class MergeSort {
      * @return A Queue of queues, each containing an item from items.
      */
     private static <Item extends Comparable> Queue<Queue<Item>>
-        makeSingleItemQueues(Queue<Item> items) {
+    makeSingleItemQueues(Queue<Item> items) {
         Queue<Queue<Item>> queueOfQueues = new Queue<>();
         for (Item i : items) {
             Queue<Item> q = new Queue<>();
@@ -62,7 +62,7 @@ public class MergeSort {
      * greatest.
      */
     private static <Item extends Comparable>
-        Queue<Item> mergeSortedQueues(Queue<Item> q1, Queue<Item> q2) {
+    Queue<Item> mergeSortedQueues(Queue<Item> q1, Queue<Item> q2) {
         Queue<Item> auxiliary = new Queue<>();
         for (int i = 0; i < q1.size() + q2.size(); i++) {
             auxiliary.enqueue(getMin(q1, q2));
@@ -80,7 +80,7 @@ public class MergeSort {
      * @return A Queue containing every item in "items".
      */
     public static <Item extends Comparable> Queue<Item> mergeSort(Queue<Item> items) {
-        if (items.size() == 1) {
+        if (items.size() == 1 || items.size() == 0) {
             return items;
         }
         if (items.size() == 2) {
