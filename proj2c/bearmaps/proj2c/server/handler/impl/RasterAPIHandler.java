@@ -85,40 +85,42 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
         double deltaLongD0 = ROOT_LRLON - ROOT_ULLON;
         double D0LDPP = deltaLongD0 / TILE_SIZE;
-        if((requestParams.get("lrlon")<ROOT_ULLON) || (requestParams.get("ullon")>ROOT_LRLON)
-            || (requestParams.get("lrlat") > ROOT_ULLAT) || (requestParams.get("ullat") < ROOT_LRLAT)){
+        if ((requestParams.get("lrlon") < ROOT_ULLON) || (requestParams.get("ullon") > ROOT_LRLON)
+                || (requestParams.get("lrlat") > ROOT_ULLAT) || (requestParams.get("ullat") < ROOT_LRLAT)) {
             return queryFail();
         }
         double queryBoxDeltaLong = requestParams.get("lrlon") - requestParams.get("ullon");
-        double queryBoxLDPP = queryBoxDeltaLong / TILE_SIZE;
+        double queryBoxLDPP = queryBoxDeltaLong / requestParams.get("w");
+
         int bestD = 0;
         for (double i = 0.0; i < 8.0; i++) {                //find the bestD resolution for queryBOX.
             double testLDPP = D0LDPP / Math.pow(2.0, i);
             if (testLDPP <= queryBoxLDPP) {
                 bestD = (int) i;
+                break;
             }
         }
         double newBoxWandH = deltaLongD0 / (Math.pow(2.0, (double) bestD));
-        double numBoxFromLEdgeToQBOXL = Math.ceil((requestParams.get("ullon") - ROOT_ULLON) / newBoxWandH);
-        double numBoxFromLEdgeToQBOXR = Math.ceil((requestParams.get("lrlon") - ROOT_ULLON) / newBoxWandH);
-        double numBoxFromTopToQBOXU = Math.ceil((ROOT_ULLAT - requestParams.get("ullat")) / newBoxWandH);
-        double numBoxFromTopToQBOXL = Math.ceil((ROOT_ULLAT - requestParams.get("lrlat")) / newBoxWandH);
-        double numBoxesX = numBoxFromLEdgeToQBOXR - numBoxFromLEdgeToQBOXL;
-        double numBoxesY = numBoxFromTopToQBOXL - numBoxFromTopToQBOXU;
+        int numBoxFromLEdgeToQBOXL = (int) ((requestParams.get("ullon") - ROOT_ULLON) / newBoxWandH);
+        int numBoxFromLEdgeToQBOXR = (int) ((requestParams.get("lrlon") - ROOT_ULLON) / newBoxWandH);
+        int numBoxFromTopToQBOXU = (int) ((ROOT_ULLAT - requestParams.get("ullat")) / newBoxWandH);
+        int numBoxFromTopToQBOXL = (int) ((ROOT_ULLAT - requestParams.get("lrlat")) / newBoxWandH);
+        int numBoxesX = numBoxFromLEdgeToQBOXR - numBoxFromLEdgeToQBOXL + 1;
+        int numBoxesY = numBoxFromTopToQBOXL - numBoxFromTopToQBOXU + 1;
 
-        String[][] nestedArrayOfPNG = new String[(int)numBoxesX][(int)numBoxesY];
-        for(int i = 0; i<numBoxesY; i++){
-            for(int j = 0; j<numBoxesX; j++){
-                nestedArrayOfPNG[i][j] = "d"+bestD+"_x"+numBoxFromLEdgeToQBOXL+j+"_y"+numBoxFromTopToQBOXU+i+".png";
+        String[][] nestedArrayOfPNG = new String[(int) numBoxesY][(int) numBoxesX];
+        for (int i = 0; i < numBoxesY; i++) {
+            for (int j = 0; j < numBoxesX; j++) {
+                nestedArrayOfPNG[i][j] = "d" + bestD + "_x" + ((int)numBoxFromLEdgeToQBOXL + j - 1) + "_y" + ((int)numBoxFromTopToQBOXU + i) + ".png";
             }
         }
 
         Map<String, Object> results = new HashMap<>();
-        results.put("render_grid", results);
-        results.put("raster_ul_lon", (numBoxFromLEdgeToQBOXL*newBoxWandH)+ROOT_ULLON);
-        results.put("raster_ul_lat", (numBoxFromTopToQBOXU*newBoxWandH)+ROOT_ULLAT);
-        results.put("raster_lr_lon", (numBoxFromLEdgeToQBOXR*newBoxWandH)+ROOT_ULLON);
-        results.put("raster_lr_lat", (numBoxFromTopToQBOXL*newBoxWandH)+ROOT_ULLAT);
+        results.put("render_grid", nestedArrayOfPNG);
+        results.put("raster_ul_lon", ((numBoxFromLEdgeToQBOXL-1) * newBoxWandH) + ROOT_ULLON);
+        results.put("raster_ul_lat", (ROOT_ULLAT - ((numBoxFromTopToQBOXU-1) * newBoxWandH)));
+        results.put("raster_lr_lon", ((numBoxFromLEdgeToQBOXR) * newBoxWandH) + ROOT_ULLON);
+        results.put("raster_lr_lat", (ROOT_ULLAT - ((numBoxFromTopToQBOXL)* newBoxWandH)));
         results.put("depth", bestD);
         results.put("query_success", true);
         return results;
