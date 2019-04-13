@@ -86,7 +86,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double deltaLongD0 = ROOT_LRLON - ROOT_ULLON;
         double D0LDPP = deltaLongD0 / TILE_SIZE;
         if((requestParams.get("lrlon")<ROOT_ULLON) || (requestParams.get("ullon")>ROOT_LRLON)
-            || (requestParams.get("lrlat") > ROOT_ULLAT) || (requestParams.get("ullat") < ROOT_ULLAT)){
+            || (requestParams.get("lrlat") > ROOT_ULLAT) || (requestParams.get("ullat") < ROOT_LRLAT)){
             return queryFail();
         }
         double queryBoxDeltaLong = requestParams.get("lrlon") - requestParams.get("ullon");
