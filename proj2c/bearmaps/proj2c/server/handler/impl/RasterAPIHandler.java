@@ -91,6 +91,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
                 || (requestParams.get("lrlat") > ROOT_ULLAT) || (requestParams.get("ullat") < ROOT_LRLAT)) {
             return queryFail();
         }
+        double queryBoxDeltaLong = requestParams.get("lrlon") - requestParams.get("ullon");
+        double queryBoxLDPP = queryBoxDeltaLong / requestParams.get("w");
         if(requestParams.get("lrlon")>ROOT_LRLON){
             requestParams.replace("lrlon", ROOT_LRLON);
         }
@@ -103,8 +105,6 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         if(requestParams.get("ullat")>ROOT_ULLAT){
             requestParams.replace("ullat", ROOT_ULLAT);
         }
-        double queryBoxDeltaLong = requestParams.get("lrlon") - requestParams.get("ullon");
-        double queryBoxLDPP = queryBoxDeltaLong / requestParams.get("w");
 
         int bestD = 0;
         for (double i = 0.0; i < 8.0; i++) {                //find the bestD resolution for queryBOX.
