@@ -91,6 +91,18 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
                 || (requestParams.get("lrlat") > ROOT_ULLAT) || (requestParams.get("ullat") < ROOT_LRLAT)) {
             return queryFail();
         }
+        if(requestParams.get("lrlon")>ROOT_LRLON){
+            requestParams.replace("lrlon", ROOT_LRLON);
+        }
+        if(requestParams.get("ullon")<ROOT_ULLON){
+            requestParams.replace("ullon", ROOT_ULLON);
+        }
+        if(requestParams.get("lrlat")<ROOT_LRLAT){
+            requestParams.replace("lrlat", ROOT_LRLAT);
+        }
+        if(requestParams.get("ullat")>ROOT_ULLAT){
+            requestParams.replace("ullat", ROOT_ULLAT);
+        }
         double queryBoxDeltaLong = requestParams.get("lrlon") - requestParams.get("ullon");
         double queryBoxLDPP = queryBoxDeltaLong / requestParams.get("w");
 
@@ -106,22 +118,20 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double newBoxH = deltaLatD0 / (Math.pow(2.0, (double) bestD));
         int numBoxFromLEdgeToQBOXL = (int) ((requestParams.get("ullon") - ROOT_ULLON) / newBoxW);
         int numBoxFromLEdgeToQBOXR = (int) ((requestParams.get("lrlon") - ROOT_ULLON) / newBoxW);
+        if(numBoxFromLEdgeToQBOXR == (ROOT_LRLON - ROOT_ULLON)/newBoxW){
+            numBoxFromLEdgeToQBOXR -=1;
+        }
         int numBoxFromTopToQBOXU = (int) ((ROOT_ULLAT - requestParams.get("ullat")) / newBoxH);
         int numBoxFromTopToQBOXL = (int) ((ROOT_ULLAT - requestParams.get("lrlat")) / newBoxH);
-        int numBoxesX = numBoxFromLEdgeToQBOXR - numBoxFromLEdgeToQBOXL;
-        int numBoxesY = numBoxFromTopToQBOXL - numBoxFromTopToQBOXU;
+        if(numBoxFromTopToQBOXL == (ROOT_ULLAT - ROOT_LRLAT)/newBoxH){
+            numBoxFromTopToQBOXL -=1;
+        }
+        int numBoxesX = numBoxFromLEdgeToQBOXR - numBoxFromLEdgeToQBOXL + 1;
+        int numBoxesY = numBoxFromTopToQBOXL - numBoxFromTopToQBOXU + 1;
 
-        int MaxNumBoxesX = (int) ((ROOT_LRLON - ROOT_ULLON)/newBoxW);
-        int MaxNumBoxesY = (int) ((ROOT_ULLAT - ROOT_LRLAT)/newBoxH);
-        if(numBoxesX > MaxNumBoxesX){
-            numBoxesX = MaxNumBoxesX - 1;
-        }
-        if(numBoxesY > MaxNumBoxesY){
-            numBoxesY = MaxNumBoxesY - 1;
-        }
-        String[][] nestedArrayOfPNG = new String[numBoxesY+1][numBoxesX+1];
-        for (int i = 0; i < numBoxesY+1; i++) {
-            for (int j = 0; j < numBoxesX+1; j++) {
+        String[][] nestedArrayOfPNG = new String[numBoxesY][numBoxesX];
+        for (int i = 0; i < numBoxesY; i++) {
+            for (int j = 0; j < numBoxesX; j++) {
 
                 nestedArrayOfPNG[i][j] = "d" + bestD + "_x" + (numBoxFromLEdgeToQBOXL + j) + "_y" + (numBoxFromTopToQBOXU + i) + ".png";
             }
