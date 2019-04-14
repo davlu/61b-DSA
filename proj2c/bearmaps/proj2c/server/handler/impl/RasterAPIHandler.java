@@ -2,6 +2,7 @@ package bearmaps.proj2c.server.handler.impl;
 
 import bearmaps.proj2c.AugmentedStreetMapGraph;
 import bearmaps.proj2c.server.handler.APIRouteHandler;
+import org.apache.commons.math3.analysis.function.Max;
 import spark.Request;
 import spark.Response;
 import bearmaps.proj2c.utils.Constants;
@@ -110,9 +111,18 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         int numBoxesX = numBoxFromLEdgeToQBOXR - numBoxFromLEdgeToQBOXL;
         int numBoxesY = numBoxFromTopToQBOXL - numBoxFromTopToQBOXU;
 
+        int MaxNumBoxesX = (int) ((ROOT_LRLON - ROOT_ULLON)/newBoxW);
+        int MaxNumBoxesY = (int) ((ROOT_ULLAT - ROOT_LRLAT)/newBoxH);
+        if(numBoxesX > MaxNumBoxesX){
+            numBoxesX = MaxNumBoxesX - 1;
+        }
+        if(numBoxesY > MaxNumBoxesY){
+            numBoxesY = MaxNumBoxesY - 1;
+        }
         String[][] nestedArrayOfPNG = new String[numBoxesY+1][numBoxesX+1];
         for (int i = 0; i < numBoxesY+1; i++) {
             for (int j = 0; j < numBoxesX+1; j++) {
+
                 nestedArrayOfPNG[i][j] = "d" + bestD + "_x" + (numBoxFromLEdgeToQBOXL + j) + "_y" + (numBoxFromTopToQBOXU + i) + ".png";
             }
         }
