@@ -39,7 +39,6 @@ public class TestRasterAPIHandler {
     public void testProcessRequests() throws Exception {
         List<Map<String, Double>> testParams = paramsFromFile();
         List<Map<String, Object>> expectedResults = resultsFromFile();
-
         for (int i = 0; i < NUM_TESTS; i++) {
             System.out.println(String.format("Running test: %d", i));
             Map<String, Double> params = testParams.get(i);
@@ -49,6 +48,66 @@ public class TestRasterAPIHandler {
                          + mapToString(params) + ".\n";
             checkParamsMap(msg, expected, actual);
         }
+    }
+
+    @Test
+    public void testOutOfBoundRequest() throws Exception {
+        Map<String, Double> params = new HashMap<>();
+        Map<String, Object> expectedResults = new HashMap<>();
+        String[][] expected = new String[2][2];
+        expected[0][0] = "d1_x0_y0.png";
+        expected[0][1] = "d1_x1_y0.png";
+        expected[1][0] = "d1_x0_y1.png";
+        expected[1][1] = "d1_x1_y1.png";
+        expectedResults.put("raster_ul_lon", -122.2998046875);
+        expectedResults.put("depth", 1);
+        expectedResults.put("raster_lr_lon", -122.2119140625);
+        expectedResults.put("raster_lr_lat", 37.82280243352756);
+        expectedResults.put("raster_ul_lat", 37.892195547244356);
+        expectedResults.put("query_success", true);
+        expectedResults.put("render_grid", expected);
+
+        params.put("lrlon",-122.20908713544797);
+        params.put("ullon",-122.3027284165759);
+        params.put("lrlat",37.848731523430196);
+        params.put("ullat",37.88708748276975);
+        params.put("w", 305.0);
+        params.put("h", 300.0);
+        Map<String, Object> actual = rasterer.processRequest(params, null);
+        String msg = "Your results did not match the expected results for input "
+                + "\n" + mapToString(params) + ".\n";
+        checkParamsMap(msg, expectedResults, actual);
+    }
+
+    @Test
+    public void test12Images() throws Exception {
+        Map<String, Double> params = new HashMap<>();
+        Map<String, Object> expectedResults = new HashMap<>();
+        String[][] expected = new String[3][4];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j <4; j++) {
+
+                expected[i][j] = "d" + 2 + "_x" + (0 + j) + "_y" + (1 + i) + ".png";
+            }
+        }
+        expectedResults.put("raster_ul_lon", -122.2998046875);
+        expectedResults.put("depth", 2);
+        expectedResults.put("raster_lr_lon", -122.2119140625);
+        expectedResults.put("raster_lr_lat", 37.82280243352756);
+        expectedResults.put("raster_ul_lat", 37.87484726881516);
+        expectedResults.put("query_success", true);
+        expectedResults.put("render_grid", expected);
+
+        params.put("lrlon",-122.2104604264636);
+        params.put("ullon",-122.30410170759153);
+        params.put("lrlat",37.8318576119893);
+        params.put("ullat",37.870213571328854);
+        params.put("w", 1091.0);
+        params.put("h", 566.0);
+        Map<String, Object> actual = rasterer.processRequest(params, null);
+        String msg = "Your results did not match the expected results for input "
+                + "\n" + mapToString(params) + ".\n";
+        checkParamsMap(msg, expectedResults, actual);
     }
 
     private List<Map<String, Double>> paramsFromFile() throws Exception {
