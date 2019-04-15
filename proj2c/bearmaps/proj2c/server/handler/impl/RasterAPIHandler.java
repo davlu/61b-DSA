@@ -121,6 +121,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         if(numBoxFromLEdgeToQBOXR == (ROOT_LRLON - ROOT_ULLON)/newBoxW){
             numBoxFromLEdgeToQBOXR -=1;
         }
+        //yes
         int numBoxFromTopToQBOXU = (int) ((ROOT_ULLAT - requestParams.get("ullat")) / newBoxH);
         int numBoxFromTopToQBOXL = (int) ((ROOT_ULLAT - requestParams.get("lrlat")) / newBoxH);
         if(numBoxFromTopToQBOXL == (ROOT_ULLAT - ROOT_LRLAT)/newBoxH){
