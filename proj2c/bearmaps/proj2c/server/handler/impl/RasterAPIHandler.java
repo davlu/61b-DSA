@@ -87,29 +87,29 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double deltaLongD0 = ROOT_LRLON - ROOT_ULLON;
         double deltaLatD0 = ROOT_ULLAT - ROOT_LRLAT;
         double D0LDPP = deltaLongD0 / TILE_SIZE;
-        if ((requestParams.get("lrlon") < ROOT_ULLON) || (requestParams.get("ullon") > ROOT_LRLON)
-                || (requestParams.get("lrlat") > ROOT_ULLAT) || (requestParams.get("ullat") < ROOT_LRLAT)) {
+        if ((requestParams.get("lrlon") < requestParams.get("ullon")) ||
+                requestParams.get("lrlat") > requestParams.get("ullat")) {
             return queryFail();
         }
         double queryBoxDeltaLong = requestParams.get("lrlon") - requestParams.get("ullon");
         double queryBoxLDPP = queryBoxDeltaLong / requestParams.get("w");
-        if(requestParams.get("lrlon")>ROOT_LRLON){
+        if (requestParams.get("lrlon") > ROOT_LRLON) {
             requestParams.replace("lrlon", ROOT_LRLON);
         }
-        if(requestParams.get("ullon")<ROOT_ULLON){
+        if (requestParams.get("ullon") < ROOT_ULLON) {
             requestParams.replace("ullon", ROOT_ULLON);
         }
-        if(requestParams.get("lrlat")<ROOT_LRLAT){
+        if (requestParams.get("lrlat") < ROOT_LRLAT) {
             requestParams.replace("lrlat", ROOT_LRLAT);
         }
-        if(requestParams.get("ullat")>ROOT_ULLAT){
+        if (requestParams.get("ullat") > ROOT_ULLAT) {
             requestParams.replace("ullat", ROOT_ULLAT);
         }
 
         int bestD = 0;
         for (double i = 0.0; i < 8.0; i++) {                //find the bestD resolution for queryBOX.
             double testLDPP = D0LDPP / Math.pow(2.0, i);
-            if (testLDPP <= queryBoxLDPP || i==7) {
+            if (testLDPP <= queryBoxLDPP || i == 7) {
                 bestD = (int) i;
                 break;
             }
@@ -118,14 +118,14 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double newBoxH = deltaLatD0 / (Math.pow(2.0, (double) bestD));
         int numBoxFromLEdgeToQBOXL = (int) ((requestParams.get("ullon") - ROOT_ULLON) / newBoxW);
         int numBoxFromLEdgeToQBOXR = (int) ((requestParams.get("lrlon") - ROOT_ULLON) / newBoxW);
-        if(numBoxFromLEdgeToQBOXR == (ROOT_LRLON - ROOT_ULLON)/newBoxW){
-            numBoxFromLEdgeToQBOXR -=1;
+        if (numBoxFromLEdgeToQBOXR == (ROOT_LRLON - ROOT_ULLON) / newBoxW) {
+            numBoxFromLEdgeToQBOXR -= 1;
         }
         //yes
         int numBoxFromTopToQBOXU = (int) ((ROOT_ULLAT - requestParams.get("ullat")) / newBoxH);
         int numBoxFromTopToQBOXL = (int) ((ROOT_ULLAT - requestParams.get("lrlat")) / newBoxH);
-        if(numBoxFromTopToQBOXL == (ROOT_ULLAT - ROOT_LRLAT)/newBoxH){
-            numBoxFromTopToQBOXL -=1;
+        if (numBoxFromTopToQBOXL == (ROOT_ULLAT - ROOT_LRLAT) / newBoxH) {
+            numBoxFromTopToQBOXL -= 1;
         }
         int numBoxesX = numBoxFromLEdgeToQBOXR - numBoxFromLEdgeToQBOXL + 1;
         int numBoxesY = numBoxFromTopToQBOXL - numBoxFromTopToQBOXU + 1;
@@ -142,8 +142,8 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         results.put("render_grid", nestedArrayOfPNG);
         results.put("raster_ul_lon", ((numBoxFromLEdgeToQBOXL) * newBoxW) + ROOT_ULLON);
         results.put("raster_ul_lat", (ROOT_ULLAT - ((numBoxFromTopToQBOXU) * newBoxH)));
-        results.put("raster_lr_lon", ((numBoxFromLEdgeToQBOXR+1) * newBoxW) + ROOT_ULLON);
-        results.put("raster_lr_lat", (ROOT_ULLAT - ((numBoxFromTopToQBOXL+1)* newBoxH)));
+        results.put("raster_lr_lon", ((numBoxFromLEdgeToQBOXR + 1) * newBoxW) + ROOT_ULLON);
+        results.put("raster_lr_lat", (ROOT_ULLAT - ((numBoxFromTopToQBOXL + 1) * newBoxH)));
         results.put("depth", bestD);
         results.put("query_success", true);
         return results;
