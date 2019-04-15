@@ -16,9 +16,23 @@ import java.util.*;
  */
 public class AugmentedStreetMapGraph extends StreetMapGraph {
     private List<Node> nodes;
+    private List<Point> points;
+    private Map<Point, Node> pointToNode;
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
-        List<Node> nodes = this.getNodes();
+        nodes = this.getNodes();
+        points = new ArrayList<>();
+        pointToNode= new HashMap<>();
+        for(Node n : nodes){
+            double calculatedY = n.lat();
+            double calculatedX = n.lon();
+            Point convertedPoint = new Point(calculatedX, calculatedY);
+            if(this.neighbors(n.id()).size()==0){
+                continue;
+            }
+            pointToNode.put(convertedPoint, n);
+            points.add(convertedPoint);
+        }
     }
 
 
@@ -30,20 +44,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * @return The id of the node in the graph closest to the target.
      */
     public long closest(double lon, double lat) {
-        List<Node> nodes = this.getNodes();
-        List<Point> points = new ArrayList<>();
-        Map<Point, Node> pointToNode= new HashMap<>();
-        for(Node n : nodes){
-            double calculatedY = n.lat();
-            double calculatedX = n.lon();
-            Point convertedPoint = new Point(calculatedX, calculatedY);
-            if(this.neighbors(n.id()).size()==0){
-                continue;
-            }
-            pointToNode.put(convertedPoint, n);
-            points.add(convertedPoint);
-        }
-        WeirdPointSet kd = new WeirdPointSet(points);
+        WeirdPointSet kd = new WeirdPointSet(this.points);
         Point best = kd.nearest(lon,lat);
         return pointToNode.get(best).id();
     }
