@@ -4,6 +4,7 @@ import bearmaps.hw4.streetmap.Node;
 import bearmaps.hw4.streetmap.StreetMapGraph;
 import bearmaps.proj2ab.Point;
 import bearmaps.proj2ab.WeirdPointSet;
+import edu.princeton.cs.algs4.TrieSET;
 
 import java.util.*;
 
@@ -18,11 +19,14 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private List<Node> nodes;
     private List<Point> points;
     private Map<Point, Node> pointToNode;
+    private TrieSET trie;
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         nodes = this.getNodes();
         points = new ArrayList<>();
         pointToNode= new HashMap<>();
+        trie = new TrieSET();
+        
         for(Node n : nodes){
             double calculatedY = n.lat();
             double calculatedX = n.lon();
