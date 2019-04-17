@@ -20,6 +20,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private Map<Point, Node> pointToNode;
     private TrieSet trie;
     private Map<String, LinkedList<String>> cleanedToReal;
+    private Map<String, Node> stringToNode;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -28,6 +29,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         pointToNode = new HashMap<>();
         trie = new TrieSet();
         cleanedToReal = new HashMap<>();
+        stringToNode = new HashMap<>();
 
         for (Node n : nodes) {
             double calculatedY = n.lat();
@@ -46,6 +48,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                     newBucket.add(n.name());
                     cleanedToReal.put(cleaned, newBucket);
                 }
+                stringToNode.put(cleaned, n);
             }
             if (this.neighbors(n.id()).size() == 0) {
                 continue;
@@ -96,7 +99,24 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "id" -> Number, The id of the node. <br>
      */
     public List<Map<String, Object>> getLocations(String locationName) {
-        return null;
+        List<Map<String, Object>> result = new LinkedList<>();
+        String cleaned = cleanString(locationName);
+        for(String s : cleanedToReal.get(cleaned)){
+            Node n = stringToNode.get(s);
+            Map<String, Object> lat = new HashMap<>();
+            Map<String, Object> lon = new HashMap<>();
+            Map<String, Object> name = new HashMap<>();
+            Map<String, Object> id = new HashMap<>();
+            lat.put("lat", n.lat());
+            lon.put("lon", n.lon());
+            name.put("name", n.name());
+            id.put("id", n.id());
+            result.add(lat);
+            result.add(lon);
+            result.add(name);
+            result.add(id);
+        }
+        return result;
     }
 
     /**
