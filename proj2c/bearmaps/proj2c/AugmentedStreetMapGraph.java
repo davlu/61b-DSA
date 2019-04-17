@@ -36,6 +36,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             if(n.name() != null) {
                 String cleaned = cleanString(n.name());
                 trie.add(cleaned);
+                if(cleaned == ""){
+                    cleaned = "0";
+                }
                 if (cleanedToReal.containsKey(cleaned)) {
                     cleanedToReal.get(cleaned).add(n.name());
                 } else {
@@ -63,6 +66,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         String cleaned = cleanString(prefix);
         List<String> results = new LinkedList<>();
         if(cleaned == ""){
+            cleaned = "0";
             for(String p : cleanedToReal.get(cleaned)){
                 results.add(p);
             }
