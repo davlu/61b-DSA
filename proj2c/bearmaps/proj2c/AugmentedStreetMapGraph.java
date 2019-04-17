@@ -101,11 +101,12 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     public List<Map<String, Object>> getLocations(String locationName) {
         List<Map<String, Object>> result = new LinkedList<>();
         String cleaned = cleanString(locationName);
-        for(Node n : nodes){
-            if(n.name() != null){
-                if(n.name().equals(cleaned)){
+        for (String s: cleanedToReal.get(cleaned)) {
+            Node prospective = stringToNode.get(s);
+            if (prospective.name() != null) {
+                if (prospective.name().equals(cleaned)) {
                     Map<String, Object> newMap = new HashMap<>();
-                    newMap.put(cleaned, n);
+                    newMap.put(cleaned, prospective);
                     result.add(newMap);
                 }
             }
