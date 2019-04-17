@@ -103,9 +103,10 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         String cleaned = cleanString(locationName);
         for(Node n : nodes){
             if(n.name() != null){
-                if(n.name()==cleaned){
-                    Map<String, Node> newMap = new HashMap<>();
+                if(n.name().equals(cleaned)){
+                    Map<String, Object> newMap = new HashMap<>();
                     newMap.put(cleaned, n);
+                    result.add(newMap);
                 }
             }
         }
