@@ -72,6 +72,9 @@ public class TrieSet implements TrieSet61B {
      */
     public List<String> keysWithPrefix(String prefix) {
         List<String> allWords = new ArrayList<>();
+        if(this.contains(prefix)){
+            allWords.add(prefix);
+        }
         Node curr = this.root;
         for (int i = 0; i < prefix.length(); i++) {
             char c = prefix.charAt(i);
