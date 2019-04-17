@@ -20,7 +20,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private Map<Point, Node> pointToNode;
     private TrieSet trie;
     private Map<String, LinkedList<String>> cleanedToReal;
-    private Map<String, Node> stringToNode;
+    private Map<String, LinkedList<Node>> stringToNode;
 
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
@@ -48,7 +48,14 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                     newBucket.add(n.name());
                     cleanedToReal.put(cleaned, newBucket);
                 }
-                stringToNode.put(cleaned, n);
+                if(stringToNode.containsKey(cleaned)){
+                    stringToNode.get(cleaned).add(n);
+                }
+                else{
+                    LinkedList<Node> newBucket = new LinkedList<>();
+                    newBucket.add(n);
+                    stringToNode.put(cleaned, newBucket);
+                }
             }
             if (this.neighbors(n.id()).size() == 0) {
                 continue;
@@ -100,14 +107,15 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      */
     public List<Map<String, Object>> getLocations(String locationName) {
         List<Map<String, Object>> result = new LinkedList<>();
-        String cleaned = cleanString(locationName);
-        for (String s: cleanedToReal.get(cleaned)) {
-            Node prospective = stringToNode.get(s);
-            if (prospective.name() != null) {
-                if (prospective.name().equals(cleaned)) {
-                    Map<String, Object> newMap = new HashMap<>();
-                    newMap.put(cleaned, prospective);
-                    result.add(newMap);
+        if(locationName!= null){
+            String cleaned = cleanString(locationName);
+            for(Node n : stringToNode.get(cleaned)){
+                if (n.name() != null) {
+                    if (n.name().equals(cleaned)) {
+                        Map<String, Object> newMap = new HashMap<>();
+                        newMap.put(cleaned, n);
+                        result.add(newMap);
+                    }
                 }
             }
         }
