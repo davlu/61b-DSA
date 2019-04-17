@@ -20,19 +20,29 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private List<Point> points;
     private Map<Point, Node> pointToNode;
     private TrieSet trie;
+    private Map<String, LinkedList<String>> cleanedToReal;
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         nodes = this.getNodes();
         points = new ArrayList<>();
         pointToNode= new HashMap<>();
         trie = new TrieSet();
+        cleanedToReal = new HashMap<>();
 
         for(Node n : nodes){
             double calculatedY = n.lat();
             double calculatedX = n.lon();
             Point convertedPoint = new Point(calculatedX, calculatedY);
-            if(n.name() != null){
-                trie.add(n.name());
+            if(n.name() != null) {
+                String cleaned = cleanString(n.name());
+                trie.add(cleaned);
+                if (cleanedToReal.containsKey(cleaned)) {
+                    cleanedToReal.get(cleaned).add(n.name());
+                } else {
+                    LinkedList<String> newBucket = new LinkedList<>();
+                    newBucket.add(n.name());
+                    cleanedToReal.put(cleaned, newBucket);
+                }
             }
             if(this.neighbors(n.id()).size()==0){
                 continue;
@@ -50,7 +60,16 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return trie.keysWithPrefix(prefix);
+        String cleaned = cleanString(prefix);
+        List<String> results = new LinkedList<>();
+        if(cleanedToReal.containsKey(cleaned)){
+            for(String s : trie.keysWithPrefix(prefix)){
+                for(String p: cleanedToReal.get(s)){
+                    results.add(p);
+                }
+            }
+        }
+        return results;
     }
 
     /**

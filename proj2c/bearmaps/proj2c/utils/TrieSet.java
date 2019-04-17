@@ -74,7 +74,7 @@ public class TrieSet implements TrieSet61B {
         List<String> allWords = new ArrayList<>();
         Node curr = this.root;
         for (int i = 0; i < prefix.length(); i++) {
-            char c = Character.toLowerCase(prefix.charAt(i));
+            char c = prefix.charAt(i);
             if (!curr.links.containsKey(c)) {
                 return allWords;
             }
