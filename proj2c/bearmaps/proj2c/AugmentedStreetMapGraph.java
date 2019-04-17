@@ -31,7 +31,9 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             double calculatedY = n.lat();
             double calculatedX = n.lon();
             Point convertedPoint = new Point(calculatedX, calculatedY);
-            trie.add(cleanString(n.name()));
+            if(n.name() != null){
+                trie.add(n.name());
+            }
             if(this.neighbors(n.id()).size()==0){
                 continue;
             }
