@@ -78,7 +78,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 results.add(p);
             }
         }
-        return 0;
+        return null;
     }
 
     /**
