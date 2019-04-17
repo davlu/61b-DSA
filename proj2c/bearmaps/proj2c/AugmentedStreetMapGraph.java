@@ -79,15 +79,15 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "name" -> String, The actual name of the node. <br>
      * "id" -> Number, The id of the node. <br>
      */
-    public List<Map<String, Node>> getLocations(String locationName) {
-        List<Map<String, Node>> result = new LinkedList<>();
+    public List<Map<String, Object>> getLocations(String locationName) {
+        List<Map<String, Object>> result = new LinkedList<>();
         if(locationName!= null){
             String cleaned = cleanString(locationName);
             for(Node n : stringToNode.get(cleaned)){
                 if(n.name() != null){
                     if (cleanString(n.name()).equals(cleaned)) {
-                        Map<String, Node> newMap = new HashMap<>();
-                        newMap.put(cleaned, n);
+                        Map<String, Object> newMap = new HashMap<>();
+                        newMap.put(locationName, n);
                         result.add(newMap);
                     }
                 }
