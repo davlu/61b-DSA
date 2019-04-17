@@ -4,7 +4,7 @@ import bearmaps.hw4.streetmap.Node;
 import bearmaps.hw4.streetmap.StreetMapGraph;
 import bearmaps.proj2ab.Point;
 import bearmaps.proj2ab.WeirdPointSet;
-import edu.princeton.cs.algs4.TrieSET;
+import bearmaps.proj2c.utils.TrieSet;
 
 import java.util.*;
 
@@ -19,18 +19,19 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     private List<Node> nodes;
     private List<Point> points;
     private Map<Point, Node> pointToNode;
-    private TrieSET trie;
+    private TrieSet trie;
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         nodes = this.getNodes();
         points = new ArrayList<>();
         pointToNode= new HashMap<>();
-        trie = new TrieSET();
-        
+        trie = new TrieSet();
+
         for(Node n : nodes){
             double calculatedY = n.lat();
             double calculatedX = n.lon();
             Point convertedPoint = new Point(calculatedX, calculatedY);
+            trie.add(cleanString(n.name()));
             if(this.neighbors(n.id()).size()==0){
                 continue;
             }
@@ -38,22 +39,6 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
             points.add(convertedPoint);
         }
     }
-
-
-    /**
-     * For Project Part II
-     * Returns the vertex closest to the given longitude and latitude.
-     * @param lon The target longitude.
-     * @param lat The target latitude.
-     * @return The id of the node in the graph closest to the target.
-     */
-    public long closest(double lon, double lat) {
-        WeirdPointSet kd = new WeirdPointSet(this.points);
-        Point best = kd.nearest(lon,lat);
-        return pointToNode.get(best).id();
-    }
-
-
     /**
      * For Project Part III (gold points)
      * In linear time, collect all the names of OSM locations that prefix-match the query string.
@@ -63,7 +48,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * cleaned <code>prefix</code>.
      */
     public List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        return trie.keysWithPrefix(prefix);
     }
 
     /**
@@ -80,9 +65,8 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * "id" -> Number, The id of the node. <br>
      */
     public List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        return null;
     }
-
 
     /**
      * Useful for Part III. Do not modify.
@@ -94,4 +78,17 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
         return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
     }
 
+
+    /**
+     * For Project Part II
+     * Returns the vertex closest to the given longitude and latitude.
+     * @param lon The target longitude.
+     * @param lat The target latitude.
+     * @return The id of the node in the graph closest to the target.
+     */
+    public long closest(double lon, double lat) {
+        WeirdPointSet kd = new WeirdPointSet(this.points);
+        Point best = kd.nearest(lon,lat);
+        return pointToNode.get(best).id();
+    }
 }
