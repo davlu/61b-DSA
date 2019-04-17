@@ -62,6 +62,11 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     public List<String> getLocationsByPrefix(String prefix) {
         String cleaned = cleanString(prefix);
         List<String> results = new LinkedList<>();
+        if(cleaned == ""){
+            for(String p : cleanedToReal.get(cleaned)){
+                results.add(p);
+            }
+        }
         if(cleanedToReal.containsKey(cleaned)){
             for(String s : trie.keysWithPrefix(prefix)){
                 for(String p: cleanedToReal.get(s)){
