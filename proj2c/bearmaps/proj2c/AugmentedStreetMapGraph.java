@@ -87,7 +87,10 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
                 if(n.name() != null){
                     if (cleanString(n.name()).equals(cleaned)) {
                         Map<String, Object> newMap = new HashMap<>();
-                        newMap.put(locationName, n);
+                        newMap.put("lat", n.lat());
+                        newMap.put("lon", n.lon());
+                        newMap.put("name", n.name());
+                        newMap.put("id", n.id());
                         result.add(newMap);
                     }
                 }
