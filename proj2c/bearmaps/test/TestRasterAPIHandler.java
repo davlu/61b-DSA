@@ -51,6 +51,20 @@ public class TestRasterAPIHandler {
     }
 
     @Test
+    public void test0() throws Exception{
+        Map<String, Double> params = new HashMap<>();
+        Map<String, Object> expectedResults = new HashMap<>();
+        params.put("lrlon",246.81464482338117);
+        params.put("ullon",310.2986051625016);
+        params.put("lrlat",798.143006387164);
+        params.put("ullat",841.8254166221226);
+        params.put("w", 549.8378974988455);
+        params.put("h", 443.4376746259018);
+        Map<String, Object> actual = rasterer.processRequest(params, null);
+        int x = 3;
+    }
+
+    @Test
     public void testOutOfBoundRequest() throws Exception {
         Map<String, Double> params = new HashMap<>();
         Map<String, Object> expectedResults = new HashMap<>();
@@ -109,6 +123,7 @@ public class TestRasterAPIHandler {
                 + "\n" + mapToString(params) + ".\n";
         checkParamsMap(msg, expectedResults, actual);
     }
+
 
     private List<Map<String, Double>> paramsFromFile() throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(PARAMS_FILE), Charset.defaultCharset());
