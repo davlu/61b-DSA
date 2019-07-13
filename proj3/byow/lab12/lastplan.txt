@@ -1,4 +1,0 @@
-finish MT
-finish arcak reader
-lab q
-do MT
